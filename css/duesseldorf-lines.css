@@ -1,0 +1,16 @@
+
+.str701, .str706 {
+  background-color: red;
+  color: white;
+  opacity: 0.4;
+}
+
+.str706 {
+  opacity: 1;
+}
+
+.bus835, .bus836, .bus723, .bus827, .bus893 {
+  background-color: #F8C623;
+  color: white;
+  opacity: 0.4;
+}

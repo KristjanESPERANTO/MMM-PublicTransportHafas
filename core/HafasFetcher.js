@@ -26,7 +26,7 @@ module.exports = class HafasFetcher {
   constructor(config) {
     this.leadTime = 40; // minutes
     this.config = config;
-    this.hafasClient = createClient(profile);
+    this.hafasClient = createClient(profile, 'MMM-PublicTransportHafas');
 
     // types given by the api
     this.possibleTypes = [

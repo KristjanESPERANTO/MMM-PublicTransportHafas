@@ -7,11 +7,10 @@ on:
 jobs:
   run-lint:
     runs-on: ubuntu-latest
-    timeout-minutes: cache: 'npm'30
+    timeout-minutes: 30
     strategy:
       matrix:
         node-version: ['16', '17']
-        cache: 'npm'
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -24,6 +23,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - name: Install dependencies and run tests
         run: |
           npm install

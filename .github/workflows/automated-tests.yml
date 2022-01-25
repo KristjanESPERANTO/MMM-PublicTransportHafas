@@ -28,6 +28,5 @@ jobs:
         run: |
           Xvfb :99 -screen 0 1024x768x16 &
           export DISPLAY=:99
-          npm install
           npm run lint:js
       - run: echo "🍏 This job's status is ${{ job.status }}."

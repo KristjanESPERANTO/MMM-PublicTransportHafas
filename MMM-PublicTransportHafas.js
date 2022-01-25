@@ -1,4 +1,4 @@
-/* global PTHAFASDomBuilder */
+/* global PTHAFASDomBuilder Module Log moment */
 
 // UserPresence Management (PIR sensor)
 let UserPresence = true; // true by default, so no impact for user without a PIR sensor

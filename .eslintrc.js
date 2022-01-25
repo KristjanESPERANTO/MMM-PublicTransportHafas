@@ -11,6 +11,7 @@ module.exports = {
     sourceType: "module"
   },
   plugins: ["prettier"],
+  root: true,
   rules: {
     "default-case": "off",
     "global-require": "off",

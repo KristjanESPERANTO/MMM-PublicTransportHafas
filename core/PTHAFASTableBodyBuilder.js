@@ -1,3 +1,4 @@
+/* global moment */
 // eslint-disable-next-line no-unused-vars
 class PTHAFASTableBodyBuilder {
   constructor(config) {

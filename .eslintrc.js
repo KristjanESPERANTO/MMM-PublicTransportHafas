@@ -10,6 +10,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module"
   },
+  plugins: ["prettier"],
   rules: {
     "default-case": "off",
     "global-require": "off",

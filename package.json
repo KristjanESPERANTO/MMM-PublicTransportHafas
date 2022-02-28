@@ -31,7 +31,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "hafas-client": "^5.22.2",
+    "hafas-client": "^5.23.0",
     "moment": "^2.29.1"
   },
   "devDependencies": {

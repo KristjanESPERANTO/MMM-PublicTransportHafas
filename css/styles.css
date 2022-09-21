@@ -35,6 +35,7 @@ them from the MagicMirror² core system and other modules.
   overflow: hidden;
   padding-left: 0.4rem;
   padding-right: 0.4rem;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

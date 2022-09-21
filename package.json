@@ -1,6 +1,6 @@
 {
   "name": "mmm-publictransporthafas",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Public transport module for MagicMirror² driven by hafas-client data.",
   "repository": {
     "type": "git",

@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.5",
-    "hafas-client": "^5.25.0"
+    "hafas-client": "^5.26.0"
   },
   "devDependencies": {
     "eslint": "^8.24.0",

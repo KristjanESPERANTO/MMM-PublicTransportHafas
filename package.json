@@ -31,7 +31,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "dayjs": "^1.11.5",
+    "dayjs": "^1.11.6",
     "hafas-client": "^5.26.1"
   },
   "devDependencies": {

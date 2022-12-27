@@ -115,7 +115,8 @@ them from the MagicMirror² core system and other modules.
 }
 
 .mmm-pth-warning-remarks span {
-  animation: mmm-pth-warning-remarks 300s linear infinite;
+  font-weight: 400;
+  animation: mmm-pth-warning-remarks 600s linear infinite;
   display: inline-block;
   padding-left: 20%;
 }

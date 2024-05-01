@@ -33,7 +33,7 @@
     "@stylistic/eslint-plugin": "^1.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
-    "globals": "^15.0.0",
+    "globals": "^15.1.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "markdownlint-cli": "^0.39.0",

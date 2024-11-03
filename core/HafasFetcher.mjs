@@ -1,8 +1,9 @@
 /* global config */
-const dayjs = require("dayjs");
-const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
-const Log = require("logger");
-const packageJson = require("../package.json");
+import Log from "../../../js/logger.js";
+import {createClient} from "hafas-client";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js";
+import packageJson from "../package.json" with { "type": "json" };
 
 dayjs.extend(isSameOrAfter);
 
@@ -16,7 +17,7 @@ function getArrayDiff (arrayA, arrayB) {
   return arrayA.filter((element) => !arrayB.includes(element));
 }
 
-module.exports = class HafasFetcher {
+export default class HafasFetcher {
   /**
    *
    * @param {object} config The configuration used for this fetcher. It has the following format:
@@ -39,7 +40,6 @@ module.exports = class HafasFetcher {
   }
 
   async init () {
-    const {createClient} = await import("hafas-client");
     const {profile} = await import(`hafas-client/p/${this.config.hafasProfile}/index.js`);
     this.hafasClient = createClient(
       profile,

@@ -9,179 +9,223 @@
  */
 
 /* Colors for each tram line */
-.str1 {
+.str1,
+.str1e {
   background-color: rgb(251 186 0);
 }
 
-.str2 {
+.str2,
+.str2e {
   background-color: rgb(239 124 0);
 }
 
-.str3 {
+.str3,
+.str3e {
   background-color: rgb(0 139 210);
 }
 
-.str4 {
+.str4,
+.str4e {
   background-color: rgb(155 16 6);
 }
 
-.str5 {
+.str5,
+.str5e {
   background-color: rgb(15 63 147);
 }
 
-.str7 {
+.str7,
+.str7e {
   background-color: rgb(234 80 151);
 }
 
-.str8 {
+.str8,
+.str8e {
   background-color: rgb(136 75 0);
 }
 
-.str9 {
+.str9,
+.str9e {
   background-color: rgb(173 175 23);
 }
 
-.str10 {
+.str10,
+.str10e {
   background-color: rgb(51 102 51);
 }
 
-.str11 {
+.str11,
+.str11e {
   background-color: rgb(153 102 0);
 }
 
-.str12 {
+.str12,
+.str12e {
   background-color: rgb(153 204 0);
 }
 
-.str15 {
+.str15,
+.str15e {
   background-color: rgb(255 102 102);
 }
 
-.str16 {
+.str16,
+.str16e {
   background-color: rgb(175 24 103);
 }
 
-.str17 {
+.str17,
+.str17e {
   background-color: rgb(25 204 102);
 }
 
-.str94 {
+.str94,
+.str94e {
   background-color: rgb(111 17 5);
 }
 
-.str95 {
+.str95,
+.str95e {
   background-color: rgb(5 21 65);
 }
 
-.str99 {
+.str99,
+.str99e {
   background-color: rgb(51 204 255);
 }
 
 /* Colors for each bus line */
-.bus21 {
+.bus21,
+.bus21e {
   background-color: rgb(255 0 0);
 }
 
-.bus22 {
+.bus22,
+.bus22e {
   background-color: rgb(9 146 184);
 }
 
-.bus23 {
+.bus23,
+.bus23e {
   background-color: rgb(0 102 51);
 }
 
-.bus24 {
+.bus24,
+.bus24e {
   background-color: rgb(119 67 50);
 }
 
-.bus25 {
+.bus25,
+.bus25e {
   background-color: rgb(171 76 0);
 }
 
-.bus26 {
+.bus26,
+.bus26e {
   background-color: rgb(89 11 34);
 }
 
-.bus27 {
+.bus27,
+.bus27e {
   background-color: rgb(141 0 75);
 }
 
-.bus28 {
+.bus28,
+.bus28e {
   background-color: rgb(226 141 0);
 }
 
-.bus30 {
+.bus30,
+.bus30e {
   background-color: rgb(116 58 118);
 }
 
-.bus31 {
+.bus31,
+.bus31e {
   background-color: rgb(201 75 24);
 }
 
-.bus32 {
+.bus32,
+.bus32e {
   background-color: rgb(153 153 0);
 }
 
-.bus34 {
+.bus34,
+.bus34e {
   background-color: rgb(0 153 153);
 }
 
-.bus35 {
+.bus35,
+.bus35e {
   background-color: rgb(23 62 112);
 }
 
-.bus36 {
+.bus36,
+.bus36e {
   background-color: rgb(139 100 37);
 }
 
-.bus40 {
+.bus40,
+.bus40e {
   background-color: rgb(204 102 119);
 }
 
-.bus41 {
+.bus41,
+.bus41e {
   background-color: rgb(0 51 255);
 }
 
-.bus42 {
+.bus42,
+.bus42e {
   background-color: rgb(111 36 114);
 }
 
-.bus43 {
+.bus43,
+.bus43e {
   background-color: rgb(0 91 55);
 }
 
-.bus44 {
+.bus44,
+.bus44e {
   background-color: rgb(0 104 180);
 }
 
-.bus52 {
+.bus52,
+.bus52e {
   background-color: rgb(214 126 43);
 }
 
-.bus53 {
+.bus53,
+.bus53e {
   background-color: rgb(181 109 40);
 }
 
-.bus60 {
+.bus60,
+.bus60e {
   background-color: rgb(255 115 0);
 }
 
-.bus61 {
+.bus61,
+.bus61e {
   background-color: rgb(181 168 0);
 }
 
-.bus62 {
+.bus62,
+.bus62e {
   background-color: rgb(245 130 32);
 }
 
-.bus65 {
+.bus65,
+.bus65e {
   background-color: rgb(68 64 136);
 }
 
-.bus91 {
+.bus91,
+.bus91e {
   background-color: rgb(184 67 11);
 }
 
-.bus97 {
+.bus97,
+.bus97e {
   background-color: rgb(90 108 2);
 }

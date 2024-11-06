@@ -96,12 +96,12 @@ them from the MagicMirror² core system and other modules.
   /* Two keyframe positions each to generate a little delay between animations. */
   0%,
   30% {
-    transform: translate(0%, 0);
+    transform: translate3d(0%, 0, 0);
   }
 
   95%,
   100% {
-    transform: translate(-35%, 0);
+    transform: translate3d(-35%, 0, 0);
   }
 }
 
@@ -123,11 +123,11 @@ them from the MagicMirror² core system and other modules.
 
 @keyframes mmm-pth-warning-remarks {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
 }
 

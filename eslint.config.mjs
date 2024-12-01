@@ -104,10 +104,13 @@ const config = [
       ...eslintPluginStylistic.configs["all-flat"].rules,
       "@stylistic/array-element-newline": "off",
       "@stylistic/indent": ["error", 2],
+      "@stylistic/lines-around-comment": "off",
       "@stylistic/padded-blocks": ["error", "never"],
       "func-style": "off",
       "import/no-unresolved": "off",
       "max-lines-per-function": ["error", 100],
+      "max-statements": ["error", 15],
+      "no-inline-comments": "off",
       "no-magic-numbers": "off",
       "one-var": "off",
       "prefer-destructuring": "off"

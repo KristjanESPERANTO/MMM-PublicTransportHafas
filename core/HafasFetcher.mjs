@@ -66,9 +66,9 @@ export default class HafasFetcher {
 
   async fetchDepartures () {
     const options = {
-      direction: this.config.direction,
-      duration: this.getTimeInFuture(),
-      when: this.getDepartureTime()
+      "direction": this.config.direction,
+      "duration": this.getTimeInFuture(),
+      "when": this.getDepartureTime()
     };
     const departures = await this.hafasClient.departures(
       this.config.stationID,
@@ -84,7 +84,10 @@ export default class HafasFetcher {
 
     filteredDepartures = this.departuresMarkedWithReachability(filteredDepartures);
     filteredDepartures = this.departuresRemovedSurplusUnreachableDepartures(filteredDepartures);
-    filteredDepartures = filteredDepartures.slice(0, maxElements);
+    filteredDepartures = filteredDepartures.slice(
+      0,
+      maxElements
+    );
 
     return filteredDepartures;
   }
@@ -93,14 +96,20 @@ export default class HafasFetcher {
     let departureTime = this.getReachableTime();
 
     if (this.config.maxUnreachableDepartures > 0) {
-      departureTime = departureTime.subtract(this.leadTime, "minutes");
+      departureTime = departureTime.subtract(
+        this.leadTime,
+        "minutes"
+      );
     }
 
     return departureTime;
   }
 
   getReachableTime () {
-    return dayjs().add(this.config.timeToStation, "minutes");
+    return dayjs().add(
+      this.config.timeToStation,
+      "minutes"
+    );
   }
 
   getTimeInFuture () {
@@ -172,7 +181,10 @@ export default class HafasFetcher {
     }
 
     // Merge unreachable and reachable departures
-    const result = [].concat(unreachableDepartures, reachableDepartures);
+    const result = [].concat(
+      unreachableDepartures,
+      reachableDepartures
+    );
 
     return result;
   }
@@ -194,4 +206,4 @@ export default class HafasFetcher {
   isReachable (departure) {
     return dayjs(departure.when).isSameOrAfter(this.getReachableTime());
   }
-};
+}

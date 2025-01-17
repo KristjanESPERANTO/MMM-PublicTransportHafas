@@ -7,7 +7,7 @@ dayjs.extend(window.dayjs_plugin_localizedFormat);
 class PtTableBodyBuilder {
   constructor (config) {
     this.config = config;
-    this.remarksCollector = [] ;
+    this.remarksCollector = [] ;  // the array with warnings that are already displayed
   }
 
   getDeparturesTableBody (departures, noDepartureMessage) {
@@ -24,7 +24,6 @@ class PtTableBodyBuilder {
     const reachableCount = departures.length;
     const unreachableCount = departures.filter((departure) => !departure.isReachable).length;
 
-    
     for (const [index, departure] of departures.entries()) {
       const row = this.getDeparturesTableRow(
         departure,
@@ -38,7 +37,6 @@ class PtTableBodyBuilder {
         // Next line is for testing if there are no warning remarks - uncomment it to append to every departure a warning remark
         // This is a list of dictionaries. There is also a "hint" type but that does not contain a summary.
         // departure.remarks.push({ "id": "326169", "type": "warning", "summary": "Meldung für Linie 8", "text": "Es kommt zu betriebsbedingten Fahrtausfällen. \nDie entfallenden Fahrten sind in der App MOOVME sowie unter www.havag.com/fahrtenplaner gekennzeichnet.", "icon": { "type": "HIM3", "title": null }, "priority": 50, "products": { "nationalExpress": true, "national": true, "regional": true, "suburban": true, "tram": true, "bus": true, "tourismTrain": true }, "company": "HAVAG - Hallesche Verkehrs-AG", "categories": [3], "validFrom": "2021-12-03T09:17:00+01:00", "validUntil": "2022-12-31T23:59:00+01:00", "modified": "2021-12-03T09:17:46+01:00" });
-        //        console.log(`These are the remarks: ${JSON.stringify(departure.remarks)}`);
         const remarksRow = this.getRemarksTableRow(departure);
         if (remarksRow.textContent !== "") {
           tBody.appendChild(remarksRow);
@@ -107,7 +105,6 @@ class PtTableBodyBuilder {
     const marquee = document.createElement("span");
     marquee.textContent = "";
 
-
     for (const remark of departure.remarks) {
       if (remark.type === "warning" &&
         !this.config.warningRemarksFilter.some((removable) => remark.text.includes(removable)) &&
@@ -118,7 +115,7 @@ class PtTableBodyBuilder {
             ${remark.text.replaceAll("\n", " ")}`;
        
       if (this.config.showWarningsOnce === true) {
-        // Add remark.summary and remark.text to the warningRemarksFilter array
+        // Add remark.summary and remark.text to the remarksCollector array. Elements in this array will not be displayed again
         this.remarksCollector.push(remark.summary, remark.text);
         }
       }

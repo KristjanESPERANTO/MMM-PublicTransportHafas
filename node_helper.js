@@ -1,6 +1,6 @@
 const Log = require("logger");
 const NodeHelper = require("node_helper");
-const DepartureFetcher = require("./core/DepartureFetcher");
+const DepartureFetcher = require("./core/DepartureFetcher.mjs").default;
 
 module.exports = NodeHelper.create({
   start () {

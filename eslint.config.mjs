@@ -12,42 +12,42 @@ const config = [
   eslintPluginPackageJson,
   ...eslintPluginMarkdown.configs.recommended,
   {
-    "files": ["**/*.md"],
-    "language": "markdown/gfm",
-    "plugins": {
+    files: ["**/*.md"],
+    language: "markdown/gfm",
+    plugins: {
       eslintPluginMarkdown
     },
-    "rules": {
+    rules: {
       "logical-assignment-operators": "off",
       "max-lines-per-function": "off",
       "no-irregular-whitespace": "off"
     }
   },
   {
-    "files": ["**/*.json"],
-    "ignores": ["package.json", "package-lock.json"],
-    "language": "json/json",
+    files: ["**/*.json"],
+    ignores: ["package.json", "package-lock.json"],
+    language: "json/json",
     ...eslintPluginJson.configs.recommended,
-    "rules": {
+    rules: {
       "logical-assignment-operators": "off",
       "max-lines-per-function": "off",
       "no-irregular-whitespace": "off"
     }
   },
   {
-    "files": ["**/*.js"],
-    "languageOptions": {
-      "ecmaVersion": "latest",
-      "globals": {
+    files: ["**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      globals: {
         ...globals.browser,
         ...globals.node
       },
-      "sourceType": "commonjs"
+      sourceType: "commonjs"
     },
-    "plugins": {
+    plugins: {
       ...eslintPluginStylistic.configs.all.plugins
     },
-    "rules": {
+    rules: {
       ...eslintPluginStylistic.configs.all.rules,
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/dot-location": ["error", "property"],
@@ -55,7 +55,7 @@ const config = [
       "@stylistic/indent": ["error", 2],
       "@stylistic/lines-around-comment": "off",
       "@stylistic/multiline-comment-style": "off",
-      "@stylistic/no-multi-spaces": ["error", {"ignoreEOLComments": true}],
+      "@stylistic/no-multi-spaces": ["error", {ignoreEOLComments: true}],
       "@stylistic/object-property-newline": "off",
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
@@ -78,31 +78,35 @@ const config = [
       "one-var": "off",
       "prefer-destructuring": "off",
       "sort-keys": "off",
-      "strict": "off"
+      strict: "off"
     }
   },
   {
-    "files": ["**/*.mjs"],
-    "languageOptions": {
-      "ecmaVersion": "latest",
-      "globals": {
+    files: ["**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      globals: {
         ...globals.node
       },
-      "sourceType": "module"
+      sourceType: "module"
     },
-    "plugins": {
+    plugins: {
       ...eslintPluginStylistic.configs.all.plugins
     },
-    "rules": {
+    rules: {
       ...eslintPluginStylistic.configs.all.rules,
       "@stylistic/array-element-newline": "off",
+      "@stylistic/function-call-argument-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
+      "@stylistic/lines-around-comment": "off",
       "@stylistic/padded-blocks": ["error", "never"],
+      "@stylistic/quote-props": ["error", "as-needed"],
       "func-style": "off",
       "import-x/no-unresolved": "off",
       "init-declarations": "off",
       "max-lines-per-function": ["error", 100],
       "max-statements": ["error", 25],
+      "no-inline-comments": "off",
       "no-magic-numbers": "off",
       "no-ternary": "off",
       "one-var": "off",

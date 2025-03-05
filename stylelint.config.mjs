@@ -1,8 +1,8 @@
 const config = {
-  "extends": ["stylelint-config-standard"],
-  "plugins": ["stylelint-prettier"],
-  "root": true,
-  "rules": {
+  extends: ["stylelint-config-standard"],
+  plugins: ["stylelint-prettier"],
+  root: true,
+  rules: {
     "prettier/prettier": true
   }
 };

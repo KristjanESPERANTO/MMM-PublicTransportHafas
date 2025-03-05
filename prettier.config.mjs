@@ -1,13 +1,13 @@
 const config = {
-  "overrides": [
+  overrides: [
     {
-      "files": "*.md",
-      "options": {
-        "parser": "markdown"
+      files: "*.md",
+      options: {
+        parser: "markdown"
       }
     }
   ],
-  "trailingComma": "none"
+  trailingComma: "none"
 };
 
 export default config;

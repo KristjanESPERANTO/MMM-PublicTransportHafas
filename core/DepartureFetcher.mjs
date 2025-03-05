@@ -1,8 +1,8 @@
 /* global */
-const dayjs = require("dayjs");
-const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
-const Log = require("logger");
-const packageJson = require("../package.json");
+import Log from "../../../js/logger.js";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js";
+import packageJson from "../package.json" with { type: "json" };
 
 dayjs.extend(isSameOrAfter);
 
@@ -16,7 +16,7 @@ function getArrayDiff (arrayA, arrayB) {
   return arrayA.filter((element) => !arrayB.includes(element));
 }
 
-module.exports = class DepartureFetcher {
+export default class DepartureFetcher {
   /**
    *
    * @param {object} config The configuration used for this fetcher. It has the following format:
@@ -209,4 +209,4 @@ module.exports = class DepartureFetcher {
   isReachable (departure) {
     return dayjs(departure.when).isSameOrAfter(this.getReachableTime());
   }
-};
+}

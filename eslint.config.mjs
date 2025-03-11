@@ -63,6 +63,7 @@ const config = [
       "consistent-this": "off",
       "default-case": "off",
       "func-style": "off",
+      "import-x/no-unresolved": ["error", {commonjs: true}],
       "init-declarations": "off",
       "line-comment-position": "off",
       "max-lines": "off",

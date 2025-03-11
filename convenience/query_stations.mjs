@@ -45,8 +45,8 @@ function printStationInfo (station) {
 
 function getUserInput () {
   const rl = readline.createInterface({
-    "input": process.stdin,
-    "output": process.stdout
+    input: process.stdin,
+    output: process.stdout
   });
   return new Promise((resolve) => {
     rl.question(
@@ -61,10 +61,10 @@ function getUserInput () {
 
 async function requestStations (client, stationName) {
   const opt = {
-    "addresses": false,
-    "poi": false,
-    "results": 10,
-    "stations": true
+    addresses: false,
+    poi: false,
+    results: 10,
+    stations: true
   };
   const response = await client.locations(
     stationName,

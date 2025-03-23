@@ -96,7 +96,7 @@ const config = [
     },
     rules: {
       ...eslintPluginStylistic.configs.all.rules,
-      "@stylistic/array-element-newline": "off",
+      "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
       "@stylistic/indent": ["error", 2],
       "@stylistic/lines-around-comment": "off",

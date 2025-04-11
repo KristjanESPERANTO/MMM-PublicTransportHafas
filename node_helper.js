@@ -1,5 +1,5 @@
-const Log = require("logger");
-const NodeHelper = require("node_helper");
+const Log = require("../../js/logger");
+const NodeHelper = require("../../js/node_helper");
 const DepartureFetcher = require("./core/DepartureFetcher.mjs").default;
 
 module.exports = NodeHelper.create({

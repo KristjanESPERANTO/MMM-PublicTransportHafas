@@ -1,0 +1,317 @@
+/*
+	This stylesheet contains the css classes needed to colorize the line labels corresponding to the colors used in "Großraumverkehr Hannover (GVH)" as of july 2025.
+
+	Supported are 
+	the "Stadtbahn"-lines from üstra,
+	the "Bus"-lines from üstra and regiobus,
+	the "S-Bahn"-lines from S-Bahn Hannover.
+	
+*/
+
+
+/*	
+	Straßenbahn Hannover
+	(Hafas client once changed its product-descriptions from "stb" to "str" and back. Leaving bot in this file to prevent further unneccesary updates)
+*/
+.MMM-PublicTransportHafas {
+	.str1,
+	.stb1,
+	.str2,
+	.stb2,
+	.str8,
+	.stb8	{
+		background-image: 	linear-gradient(0deg, #e40038 0 4px, rgba(255,255,255,0) 4px calc(100% - 4px), #e40038 calc(100% - 4px) 100%),
+							linear-gradient(90deg, #e40038 0 4px, white 4px calc(100% - 4px), #e40038 calc(100% - 4px) 100%);
+		color: #000000;
+	}
+
+
+	.str4,
+	.stb4,
+	.str5,
+	.stb5,
+	.str6,
+	.stb6,
+	.str11,
+	.stb11,
+	.str14,
+	.stb14	{
+		background-image: 	linear-gradient(0deg, #f9b000 0 4px, rgba(255,255,255,0) 4px calc(100% - 4px), #f9b000 calc(100% - 4px) 100%),
+							linear-gradient(90deg, #f9b000 0 4px, white 4px calc(100% - 4px), #f9b000 calc(100% - 4px) 100%);
+		color: #000000;
+	}
+
+
+	.str3,
+	.stb3,
+	.str7,
+	.stb7,
+	.str9,
+	.stb9,
+	.str13,
+	.stb13	{
+		background-image: 	linear-gradient(0deg, #0068b4 0 4px, rgba(255,255,255,0) 4px calc(100% - 4px), #0068b4 calc(100% - 4px) 100%),
+							linear-gradient(90deg, #0068b4 0 4px, white 4px calc(100% - 4px), #0068b4 calc(100% - 4px) 100%);
+		color: #000000;
+	}
+
+
+	.str10,
+	.stb10,
+	.str12, 
+	.stb12,
+	.str17,
+	.stb17 {
+		color:#000000;
+		background-image: 	linear-gradient(0deg, #75b726 0 4px, rgba(255,255,255,0) 4px calc(100% - 4px), #75b726 calc(100% - 4px) 100%),
+							linear-gradient(90deg, #75b726 0 4px, white 4px calc(100% - 4px), #75b726 calc(100% - 4px) 100%);
+	}
+
+	/*
+		S-Bahn Hannover
+	*/
+
+	.s1	{
+		background-color: #73659a;
+		border-color: #73659a;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s2,
+	.s21	{
+		background-color: #007845;
+		border-color: #007845;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s3	{
+		background-color: #b9639a;
+		border-color: #b9639a;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s4	{
+		background-color: #863048;
+		border-color: #863048;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s5,
+	.s51	{
+		background-color: #e9822c;
+		border-color: #e9822c;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s6	{
+		background-color: #005093;
+		border-color: #005093;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.s7	{
+		background-color: #9ec847;
+		border-color: #9ec847;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+
+	.s8	{
+		background-color: #009ad8;
+		border-color: #009ad8;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+
+	/*	
+		Stadtbus Hannover
+	*/
+
+	.bus100	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #d8127e 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #d8127e, #d8127e);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus120,
+	.bus129,
+	.bus137,
+	.bus363,
+	.bus367,
+	.bus373	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #eb8b2d 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #eb8b2d, #eb8b2d);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus121,
+	.bus124,
+	.bus130,
+	.bus365,
+	.bus460,
+	.bus490,
+	.bus580,
+	.bus631	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #91c33f 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #91c33f, #91c33f);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus122,
+	.bus127,
+	.bus330,
+	.bus450,
+	.bus700	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #f6bc26 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #f6bc26, #f6bc26);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus123,
+	.bus200,
+	.bus420,
+	.bus470,
+	.bus571	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #e680a9 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #e680a9, #e680a9);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus125,
+	.bus126,
+	.bus340,
+	.bus360,
+	.bus500,
+	.bus570	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #d8232a 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #d8232a, #d8232a);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus128,
+	.bus136	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #922e32 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #922e32, #922e32);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus133,
+	.bus300,
+	.bus581,
+	.bus620	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #8a3d85 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #8a3d85, #8a3d85);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus134,
+	.bus135,
+	.bus267,
+	.bus341,
+	.bus400,
+	.bus574	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #2dab66 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #2dab66, #2dab66);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus253	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #ef7f1a 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #ef7f1a, #ef7f1a);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus254	{
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #01b1e8 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #01b1e8, #01b1e8);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+
+	.bus366,
+	.bus492,
+	.bus572,
+	.bus800,
+	.bus900 {
+		background-image:	radial-gradient(ellipse closest-side at 37% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 63% 50%, white 0 75%, rgba(255,255,255,0) 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, white 0 75%, #14A9D9 75% 100%),
+							radial-gradient(ellipse closest-side at 50% 50%, #14A9D9, #14A9D9);
+		color: #000000;
+		width: 2em;
+		border-radius: 1em;
+	}
+	.busN31,
+	.busN41,
+	.busN43,
+	.busN56,
+	.busN57,
+	.busN62,
+	.busN63,
+	.busN70,
+	.busN94 {
+		background-color: #172D4B;
+		color: white;
+		width: 2em;
+		border-radius: 1em;
+	}
+}

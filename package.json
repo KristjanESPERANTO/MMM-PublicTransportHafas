@@ -39,7 +39,7 @@
     ]
   },
   "dependencies": {
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "db-vendo-client": "^6.10.0",
     "hafas-client": "^6.3.5"
   },

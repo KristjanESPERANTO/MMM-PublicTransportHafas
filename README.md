@@ -99,10 +99,10 @@ Stops found for 'Leipzig, Wilhelm-Leuschner-Platz':
    Transport product(s): Bus, Tram
 ```
 
-By default, the module uses the `db` profile. In some cases it can be advantageous to use a different profile - e.g. the default profile often does not provide platform information from local transport companies. [Here](https://github.com/public-transport/hafas-client/blob/master/p/readme.md) you can find the name of all supported interfaces. Just add the name as a parameter to the command. Like `sbb` for the profile of Swiss Railways.
+By default, the module uses the `db` profile. In some cases it can be advantageous to use a different profile - e.g. the default profile often does not provide platform information from local transport companies. [Here](https://github.com/public-transport/hafas-client/blob/master/p/readme.md) you can find the name of all supported interfaces. Just add the name as a parameter to the command. Like `bvg` for the profile of Berlin public transport:
 
 ```bash
-node --run query sbb
+node --run query -- bvg
 ```
 
 ## Configuration

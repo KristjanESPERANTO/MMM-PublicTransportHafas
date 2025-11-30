@@ -1,9 +1,18 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [3.5.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.0...v3.5.1) (2025-11-30)
+
+### Documentation
+
+- replace not working sbb profile with working one for query script ([695e2e1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/695e2e1214a6d3adcace1667b9b7583cfa2562ce))
+
+### Changed
+
+- **ci:** add release script and changelog configuration ([49f3c7b](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/49f3c7b8fe8e8b70ca7cedd06e5767804ebc1b29))
+- update dependencies ([459bf86](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/459bf86930a44e9332d0b10add9d829889fbb36f))
+- update Node.js action to v6 in automated tests workflow ([7684fdc](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/7684fdce152fc82f2e6fe95f511474943362f9e3))
 
 ## [3.5.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.4.0...v3.5.0) 2025-10-17
 

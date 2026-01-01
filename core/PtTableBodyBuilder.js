@@ -26,7 +26,7 @@ class PtTableBodyBuilder {
       : [];
     const filteredDepartures = excludeDirections.length === 0
       ? departures
-      : departures.filter((departure) => !excludeDirections.some((direction) => departure.direction === direction));
+      : departures.filter((departure) => !excludeDirections.includes(departure.direction));
     if (filteredDepartures.length === 0) {
       const row = this.getDeparturesTableNoDeparturesRow(noDepartureMessage);
       tBody.appendChild(row);

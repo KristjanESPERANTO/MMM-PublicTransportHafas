@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.5.2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.1...v3.5.2) (2026-01-01)
+
+### Chores
+
+- add demo config and demo script ([1cd4a56](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/1cd4a56e4de19a2eaa11404d318df101c0d8f5cb))
+- **changelog:** change section label for chore type ([9ba98b6](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/9ba98b6d8b87e15b588e3b10d0f62e88b7bc9825))
+- fix contributors section in package.json ([39e4890](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/39e4890bc37a1827e01c01b92e73513a6cdf3a42))
+- make simple-git-hooks more robust and platform independent ([679cc27](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/679cc2768b9e51761cac22764ea445448f6b0db2))
+- update dependencies ([41265f7](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/41265f7d17cf19faeab8ec21ed0a3e4cec16b6db))
+
+### Code Refactoring
+
+- improve log message formatting ([ab655ad](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/ab655ad0cb5cf98d6419d558678008b801a6d6bd))
+- optimize DOM builder initialization ([74448b6](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/74448b68c1a41ba213ade45805e444b9a295b386))
+- remove module prefix from log messages ([8118f16](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/8118f16537787e5fbe3a770c2a3442f5e83ce324))
+- simplify departure filtering logic ([fb6f531](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/fb6f5313d8249f5b92626cc70c04a579152a116a))
+
 ## [3.5.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.0...v3.5.1) (2025-11-30)
 
 ### Documentation

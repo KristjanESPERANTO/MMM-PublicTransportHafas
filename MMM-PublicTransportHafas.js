@@ -76,6 +76,9 @@ Module.register("MMM-PublicTransportHafas", {
 
     this.sanitizeConfig();
 
+    // Initialize DOM builder once for better performance
+    this.domBuilder = new PtDomBuilder(this.config);
+
     if (!this.config.stationID) {
       this.error.message = this.translate("NO_STATION_ID_SET");
       return;
@@ -155,8 +158,6 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getDom () {
-    const domBuilder = new PtDomBuilder(this.config);
-
     // Error handling - only show error if threshold is exceeded
     if (this.hasErrors() && this.errorCount > this.config.discardSocketErrorThreshold) {
       Log.error("[MMM-PublicTransportHafas]", this.error);
@@ -189,7 +190,7 @@ Module.register("MMM-PublicTransportHafas", {
 
       Log.error("[MMM-PublicTransportHafas]", errorMessage.replace(/<br>/gu, " "));
       errorMessage = `${this.translate("ERROR_UNAVAILABLE")}<br><br><small>⚠️ ${errorMessage}</small>`;
-      return domBuilder.getSimpleDom(errorMessage);
+      return this.domBuilder.getSimpleDom(errorMessage);
     }
 
     // Log errors below threshold as warnings
@@ -199,7 +200,7 @@ Module.register("MMM-PublicTransportHafas", {
 
 
     if (!this.initialized) {
-      return domBuilder.getSimpleDom(this.translate("LOADING"));
+      return this.domBuilder.getSimpleDom(this.translate("LOADING"));
     }
 
     const headings = {
@@ -211,7 +212,7 @@ Module.register("MMM-PublicTransportHafas", {
 
     const noDeparturesMessage = this.translate("PTH_NO_DEPARTURES");
 
-    const wrapper = domBuilder.getDom(
+    const wrapper = this.domBuilder.getDom(
       this.departures,
       headings,
       noDeparturesMessage

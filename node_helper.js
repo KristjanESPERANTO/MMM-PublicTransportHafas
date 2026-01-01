@@ -43,13 +43,13 @@ module.exports = NodeHelper.create({
       // Init in background
       try {
         await fetcher.init();
-        Log.info(`[MMM-PublicTransportHafas] Transportation fetcher for station with id '${fetcher.getStationID()}' created.`);
+        Log.info(`Transportation fetcher for station with id '${fetcher.getStationID()}' created.`);
       } catch (error) {
-        Log.error(`[MMM-PublicTransportHafas] Failed to initialize fetcher for station id '${config.stationID}'. Will retry on next fetch cycle.`, error);
+        Log.error(`Failed to initialize fetcher for station id '${config.stationID}'. Will retry on next fetch cycle.`, error);
       }
     } else {
       fetcher = this.departuresFetchers[config.identifier];
-      Log.info(`[MMM-PublicTransportHafas] Using existing transportation fetcher for station id '${fetcher.getStationID()}'.`);
+      Log.info(`Using existing transportation fetcher for station id '${fetcher.getStationID()}'.`);
       this.sendFetcherLoaded(fetcher);
     }
   },
@@ -81,14 +81,14 @@ module.exports = NodeHelper.create({
     // Fetcher not initialized yet - try to create it now
     const config = this.fetcherConfigs[identifier];
     if (config) {
-      Log.log("[MMM-PublicTransportHafas] Fetcher undefined, attempting to create it now.");
+      Log.log("Fetcher undefined, attempting to create it now.");
       await this.createFetcher(config);
       // Try again after creation attempt
       await this.fetchDepartures(identifier);
       return;
     }
 
-    Log.log("[MMM-PublicTransportHafas] fetcher is undefined. If this occurs only sporadically, it is not a problem.");
+    Log.log("Fetcher is undefined. If this occurs only sporadically, it is not a problem.");
   },
 
   /**
@@ -101,12 +101,12 @@ module.exports = NodeHelper.create({
   async fetchWithInitializedFetcher (fetcher) {
     // Check if fetcher needs initialization (in case it failed before)
     if (!fetcher.hafasClient) {
-      Log.log("[MMM-PublicTransportHafas] Fetcher not fully initialized, attempting init now.");
+      Log.log("Fetcher not fully initialized, attempting init now.");
       try {
         await fetcher.init();
-        Log.info("[MMM-PublicTransportHafas] Fetcher initialization successful on retry.");
+        Log.info("Fetcher initialization successful on retry.");
       } catch (error) {
-        Log.error("[MMM-PublicTransportHafas] Fetcher initialization failed again.", error);
+        Log.error("Fetcher initialization failed again.", error);
         const payload = {
           error,
           identifier: fetcher.getIdentifier()

@@ -41,14 +41,14 @@ export default class DepartureFetcher {
     let createClient;
     let profile;
     if (this.config.hafasProfile === "db" || this.config.hafasProfile === "dbweb") {
-      Log.info("[MMM-PublicTransportHafas] Using vendo client");
+      Log.info("Using vendo client");
       const vendoClient = await import("db-vendo-client");
       const createVendoClient = vendoClient.createClient;
       createClient = createVendoClient;
       const vendo = await import(`db-vendo-client/p/${this.config.hafasProfile}/index.js`);
       profile = vendo.profile;
     } else {
-      Log.info("[MMM-PublicTransportHafas] Using HAFAS client");
+      Log.info("Using HAFAS client");
       const hafasClient = await import("hafas-client");
       const createHafasClient = hafasClient.createClient;
       createClient = createHafasClient;
@@ -183,7 +183,7 @@ export default class DepartureFetcher {
     const reachableDepartures = departures.filter((departure) => departure.isReachable);
 
     // Output reachableDepartures for debugging
-    Log.debug("[MMM-PublicTransportHafas]", reachableDepartures);
+    Log.debug(reachableDepartures);
 
     // Merge unreachable and reachable departures
     const result = [].concat(unreachableDepartures, reachableDepartures);

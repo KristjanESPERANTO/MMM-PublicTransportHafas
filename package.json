@@ -19,8 +19,10 @@
   "license": "MIT",
   "author": "Kristjan ESPERANTO (https://github.com/KristjanESPERANTO)",
   "contributors": [
-    "https://github.com/raywo/MMM-PublicTransportHafas/graphs/contributors",
-    "https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/graphs/contributors"
+    {
+      "name": "Contributors to KristjanESPERANTO/MMM-PublicTransportHafas",
+      "url": "https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/graphs/contributors"
+    }
   ],
   "main": "MMM-PublicTransportHafas.js",
   "type": "commonjs",

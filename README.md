@@ -167,7 +167,7 @@ Here is an example for an entry in the modules array in your `config.js`:
         // Departures options
         stationID: "8012202",                   // Replace with your stationID!
         stationName: "Wilhelm-Leuschner-Platz", // Replace with your station name!
-        direction: "",                    // Show only departures heading to this station. (A station ID.)
+        directions: [],                    // Show only departures heading to these stations. (A list of station IDs.)
         excludedTransportationTypes: [],  // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: "tram", "bus", "suburban", "subway", "regional" and "national"
         ignoredLines: [],                 // Which lines should be ignored? (comma-separated list of line names)
         timeToStation: 10,                // How long do you need to walk to the next Station?

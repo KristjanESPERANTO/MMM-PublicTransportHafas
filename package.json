@@ -27,7 +27,7 @@
   "scripts": {
     "lint": "eslint && prettier . --check",
     "lint:fix": "eslint --fix && prettier . --write",
-    "postinstall": "simple-git-hooks",
+    "prepare": "node -e \"try{require('simple-git-hooks').run()}catch(e){}\"",
     "query": "node ./convenience/query_stations.mjs",
     "release": "commit-and-tag-version --config ./changelog.config.js",
     "test": "node --run lint && node --run test:spelling",

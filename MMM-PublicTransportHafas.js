@@ -30,7 +30,8 @@ Module.register("MMM-PublicTransportHafas", {
     discardSocketErrorThreshold: 3,     // How many consecutive socket errors should be tolerated before showing an error message? (0 = show errors immediately)
 
     // Departures options
-    direction: "",                      // Show only departures heading to this station. (A station ID.)
+    direction: "",                      // Deprecated. Will be used if directions is empty.
+    directions: [],                     // Show only departures heading to this station. (A station ID.)
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
     ignoreRelatedStations: false,       // For some stations there are related stations. By default, their departures are also displayed.
     excludedTransportationTypes: [],    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: "tram", "bus", "suburban", "subway", "regional" and "national"
@@ -81,13 +82,21 @@ Module.register("MMM-PublicTransportHafas", {
       return;
     }
 
+    // Determine directions (in case old keyword is used)
+    let directions = [];
+    if (this.config.directions && this.config.directions.length > 0) {
+      directions = this.config.directions;
+    } else if (this.config.direction) {
+      directions = [this.config.direction];
+    }
+
     const fetcherOptions = {
       identifier: this.identifier,
       hafasProfile: this.config.hafasProfile,
       stationID: this.config.stationID,
       timeToStation: this.config.timeToStation,
       timeInFuture: this.config.timeInFuture,
-      direction: this.config.direction,
+      directions,
       ignoredLines: this.config.ignoredLines,
       ignoreRelatedStations: this.config.ignoreRelatedStations,
       excludedTransportationTypes: this.config.excludedTransportationTypes,

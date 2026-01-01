@@ -151,7 +151,7 @@ Module.register("MMM-PublicTransportHafas", {
       this.startFetchingLoop(this.config.updatesEvery);
     } else {
       // (UserPresence = false OU ModulePublicTransportHafasHidden = true)
-      Log.debug(`[MMM-PublicTransportHafas] No one is watching: Stop the update!${this.config.stationName}`);
+      Log.debug(`[MMM-PublicTransportHafas] No one is watching: Stop the update! ${this.config.stationName}`);
       clearInterval(this.updatesIntervalID); // Stop the current update interval
       this.updatesIntervalID = 0; // Reset the variable
     }
@@ -281,11 +281,11 @@ Module.register("MMM-PublicTransportHafas", {
             this.lastUpdate = Date.now() / 1_000; // Save the timestamp of the last update to be able to display it
           }
 
-          Log.log(`[MMM-PublicTransportHafas] Update OK, station : ${
+          Log.log(`[MMM-PublicTransportHafas] Update OK, station: ${
             this.config.stationName
-          } at : ${Number(dayjs
+          } at: ${dayjs
             .unix(this.lastUpdate)
-            .format(this.config.displayLastUpdateFormat))}`);
+            .format(this.config.displayLastUpdateFormat)}`);
 
           // Reset error object and error count on successful fetch
           this.error = {};

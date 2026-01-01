@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.19",
-    "db-vendo-client": "^6.10.6",
+    "db-vendo-client": "^6.10.7",
     "hafas-client": "^6.3.6"
   },
   "devDependencies": {

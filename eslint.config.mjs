@@ -50,6 +50,7 @@ export default defineConfig([
       strict: "off"
     }
   },
+  {files: ["demo.config.js"], rules: {"prefer-const": "off"}},
   {files: ["**/*.json"], ignores: ["package-lock.json"], plugins: {json}, extends: ["json/recommended"], language: "json/json"},
   {files: ["package.json"], plugins: {packageJson}, extends: ["packageJson/recommended"]},
   {files: ["**/*.md"], plugins: {markdown}, extends: ["markdown/recommended"], language: "markdown/gfm"}

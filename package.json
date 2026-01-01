@@ -27,6 +27,7 @@
   "main": "MMM-PublicTransportHafas.js",
   "type": "commonjs",
   "scripts": {
+    "demo": "cd ../../ && MM_CONFIG_FILE=modules/MMM-PublicTransportHafas/demo.config.js node --run start:wayland:dev",
     "lint": "eslint && prettier . --check",
     "lint:fix": "eslint --fix && prettier . --write",
     "prepare": "node -e \"try{require('simple-git-hooks').run()}catch(e){}\"",

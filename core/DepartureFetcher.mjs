@@ -84,46 +84,61 @@ export default class DepartureFetcher {
       ? this.config.directions
       : [null];
 
-    const optionsBase = {
-      duration: this.getTimeInFuture(),
-      when: this.getDepartureTime()
-    };
+    // Build promises for parallel API calls
+    const promises = directions.map((direction) => {
+      const options = {
+        duration: this.getTimeInFuture(),
+        when: this.getDepartureTime()
+      };
 
-    const requests = directions.map((direction) => {
-      const options = direction
-        ? {...optionsBase, direction}
-        : {...optionsBase};
+      if (direction) {
+        options.direction = direction;
+      }
 
       return this.hafasClient.departures(this.config.stationID, options);
     });
-    const results = await Promise.allSettled(requests);
+
+    // Execute all requests in parallel with error handling
+    const results = await Promise.allSettled(promises);
 
     const allDepartures = [];
+    const failures = [];
 
-    for (const result of results) {
+    for (const [index, result] of results.entries()) {
       if (result.status === "fulfilled") {
         allDepartures.push(...result.value.departures);
       } else {
-        // optional logging
+        failures.push({direction: directions[index], error: result.reason});
         Log.error(
-          "[MMM-PublicTransportHafas] Departure request failed:",
-          result.reason?.hafasMessage ?? result.reason?.message ?? "Unknown HAFAS error"
+          `[MMM-PublicTransportHafas] Failed to fetch departures for direction ${directions[index]}:`,
+          result.reason
         );
       }
     }
 
-    allDepartures.sort((item1, item2) => new Date(item1.when) - new Date(item2.when));
+    // Continue with successful results even if some failed
+    if (failures.length > 0) {
+      Log.warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
+    }
 
+    // Robust sorting with null checks (HAFAS may return plannedWhen instead of when)
+    allDepartures.sort((dep1, dep2) => {
+      const timeA = new Date(dep1.when || dep1.plannedWhen || 0).getTime();
+      const timeB = new Date(dep2.when || dep2.plannedWhen || 0).getTime();
+      return timeA - timeB;
+    });
+
+    // Improved duplicate detection using tripId and optional chaining
     const seen = new Set();
     let filteredDepartures = allDepartures.filter((dep) => {
-      const id = `${dep.when}-${dep.stop.id}-${dep.line?.id}`;
+      // tripId is more unique than line.id, use it if available
+      const id = `${dep.tripId || dep.line?.id || "unknown"}-${dep.when || dep.plannedWhen}-${dep.stop?.id || ""}`;
       if (seen.has(id)) {
         return false;
       }
       seen.add(id);
       return true;
     });
-
 
     const maxElements =
       this.config.maxReachableDepartures +

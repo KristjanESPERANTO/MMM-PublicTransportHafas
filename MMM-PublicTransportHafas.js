@@ -103,6 +103,7 @@ Module.register("MMM-PublicTransportHafas", {
       ignoredLines: this.config.ignoredLines,
       ignoreRelatedStations: this.config.ignoreRelatedStations,
       excludedTransportationTypes: this.config.excludedTransportationTypes,
+      excludeDirections: this.config.excludeDirections,
       maxReachableDepartures: this.config.maxReachableDepartures,
       maxUnreachableDepartures: this.config.maxUnreachableDepartures
     };

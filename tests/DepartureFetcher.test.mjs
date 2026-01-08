@@ -227,6 +227,65 @@ describe("filterByStopId", () => {
 });
 
 // =============================================================================
+// Tests: filterByExcludedDirections
+// =============================================================================
+
+describe("filterByExcludedDirections", () => {
+  it("should filter out excluded directions", () => {
+    const fetcher = createFetcher({excludeDirections: ["Airport", "Stadium"]});
+    const departures = [
+      createDeparture({direction: "Hauptbahnhof"}),
+      createDeparture({direction: "Airport"}),
+      createDeparture({direction: "City Center"}),
+      createDeparture({direction: "Stadium"})
+    ];
+
+    const result = fetcher.filterByExcludedDirections(departures);
+
+    assert.strictEqual(result.length, 2);
+    assert.strictEqual(result[0].direction, "Hauptbahnhof");
+    assert.strictEqual(result[1].direction, "City Center");
+  });
+
+  it("should return all departures when excludeDirections is empty", () => {
+    const fetcher = createFetcher({excludeDirections: []});
+    const departures = [
+      createDeparture({direction: "Hauptbahnhof"}),
+      createDeparture({direction: "Airport"})
+    ];
+
+    const result = fetcher.filterByExcludedDirections(departures);
+
+    assert.strictEqual(result.length, 2);
+  });
+
+  it("should return all departures when excludeDirections is undefined", () => {
+    const fetcher = createFetcher({});
+    const departures = [
+      createDeparture({direction: "Hauptbahnhof"}),
+      createDeparture({direction: "Airport"})
+    ];
+
+    const result = fetcher.filterByExcludedDirections(departures);
+
+    assert.strictEqual(result.length, 2);
+  });
+
+  it("should be case-sensitive", () => {
+    const fetcher = createFetcher({excludeDirections: ["airport"]});
+    const departures = [
+      createDeparture({direction: "Airport"}),
+      createDeparture({direction: "airport"})
+    ];
+
+    const result = fetcher.filterByExcludedDirections(departures);
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].direction, "Airport");
+  });
+});
+
+// =============================================================================
 // Tests: adjustLeadTime
 // =============================================================================
 

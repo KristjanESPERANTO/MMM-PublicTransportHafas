@@ -21,22 +21,10 @@ class PtTableBodyBuilder {
       return tBody;
     }
 
-    const excludeDirections = Array.isArray(this.config.excludeDirections)
-      ? this.config.excludeDirections
-      : [];
-    const filteredDepartures = excludeDirections.length === 0
-      ? departures
-      : departures.filter((departure) => !excludeDirections.includes(departure.direction));
-    if (filteredDepartures.length === 0) {
-      const row = this.getDeparturesTableNoDeparturesRow(noDepartureMessage);
-      tBody.appendChild(row);
-      return tBody;
-    }
+    const reachableCount = departures.length;
+    const unreachableCount = departures.filter((departure) => !departure.isReachable).length;
 
-    const reachableCount = filteredDepartures.length;
-    const unreachableCount = filteredDepartures.filter((departure) => !departure.isReachable).length;
-
-    for (const [index, departure] of filteredDepartures.entries()) {
+    for (const [index, departure] of departures.entries()) {
       const row = this.getDeparturesTableRow(
         departure,
         index,
@@ -56,7 +44,7 @@ class PtTableBodyBuilder {
         }
       }
 
-      const nextDeparture = filteredDepartures[index + 1];
+      const nextDeparture = departures[index + 1];
       this.insertRulerIfNecessary(
         tBody,
         departure,

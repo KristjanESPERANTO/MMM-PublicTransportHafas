@@ -28,6 +28,7 @@ export default class DepartureFetcher {
    *          directions: *an array of station ids*,
    *          ignoredLines: *an array of line names which are to be ignored*,
    *          excludedTransportationTypes: *an array of product names which are not to be shown*,
+   *          excludeDirections: *an array of destination names to omit from the display*,
    *          maxReachableDepartures: *an integer describing how many departures should be fetched*,
    *          maxUnreachableDepartures: *an integer describing how many unreachable departures should be fetched*
    *        }
@@ -151,6 +152,7 @@ export default class DepartureFetcher {
       filteredDepartures = this.filterByStopId(filteredDepartures);
     }
 
+    filteredDepartures = this.filterByExcludedDirections(filteredDepartures);
     filteredDepartures = this.departuresMarkedWithReachability(filteredDepartures);
     filteredDepartures = this.departuresRemovedSurplusUnreachableDepartures(filteredDepartures);
 
@@ -209,6 +211,14 @@ export default class DepartureFetcher {
    */
   filterByStopId (departures) {
     return departures.filter((departure) => departure.stop.id === this.config.stationID);
+  }
+
+  filterByExcludedDirections (departures) {
+    if (!this.config.excludeDirections || this.config.excludeDirections.length === 0) {
+      return departures;
+    }
+
+    return departures.filter((departure) => !this.config.excludeDirections.includes(departure.direction));
   }
 
   departuresMarkedWithReachability (departures) {

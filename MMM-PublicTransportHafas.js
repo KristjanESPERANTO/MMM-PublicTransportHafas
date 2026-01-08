@@ -63,7 +63,7 @@ Module.register("MMM-PublicTransportHafas", {
     animationSpeed: 1_500               // Refresh animation speed in milliseconds
   },
 
-  start () {
+  async start () {
     Log.info(`Starting module: ${this.name} with identifier: ${this.identifier}`);
 
     this.ModulePublicTransportHafasHidden = false; // By default we display the module (if no carousel or other module)
@@ -75,7 +75,7 @@ Module.register("MMM-PublicTransportHafas", {
     this.error = {};
     this.errorCount = 0;
 
-    this.sanitizeConfig();
+    await this.sanitizeConfig();
 
     // Initialize DOM builder once for better performance
     this.domBuilder = new PtDomBuilder(this.config);
@@ -330,26 +330,10 @@ Module.register("MMM-PublicTransportHafas", {
     return payload.identifier === this.identifier;
   },
 
-  sanitizeConfig () {
-    if (this.config.updatesEvery < 30) {
-      this.config.updatesEvery = 30;
-    }
-
-    if (this.config.timeToStation < 0) {
-      this.config.timeToStation = 0;
-    }
-
-    if (this.config.timeInFuture < this.config.timeToStation + 30) {
-      this.config.timeInFuture = this.config.timeToStation + 30;
-    }
-
-    if (this.config.maxUnreachableDepartures < 0) {
-      this.config.maxUnreachableDepartures = 0;
-    }
-
-    if (this.config.maxReachableDepartures < 0) {
-      this.config.maxReachableDepartures = this.defaults.maxReachableDepartures;
-    }
+  async sanitizeConfig () {
+    // Dynamic import to load ESM module in browser
+    const {sanitizeConfig} = await import("./core/ConfigValidator.mjs");
+    this.config = sanitizeConfig(this.config, this.defaults);
   },
 
   startFetchingLoop (interval) {

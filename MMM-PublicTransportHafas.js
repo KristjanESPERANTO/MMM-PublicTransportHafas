@@ -1,4 +1,4 @@
-/* global dayjs PtDomBuilder Module Log config */
+/* global dayjs Module Log config */
 
 /*
  * UserPresence Management (PIR sensor)
@@ -77,8 +77,13 @@ Module.register("MMM-PublicTransportHafas", {
 
     await this.sanitizeConfig();
 
-    // Initialize DOM builder once for better performance
-    this.domBuilder = new PtDomBuilder(this.config);
+    // Load ESM DOM builder module and initialize with dayjs
+    // dayjs plugins are loaded globally via getScripts()
+    dayjs.extend(window.dayjs_plugin_relativeTime);
+    dayjs.extend(window.dayjs_plugin_localizedFormat);
+
+    const {default: PtDomBuilder} = await import("./core/PtDomBuilder.mjs");
+    this.domBuilder = new PtDomBuilder(this.config, dayjs);
 
     if (!this.config.stationID) {
       this.error.message = this.translate("NO_STATION_ID_SET");
@@ -264,9 +269,7 @@ Module.register("MMM-PublicTransportHafas", {
       this.file("node_modules/dayjs/dayjs.min.js"),
       this.file("node_modules/dayjs/plugin/localizedFormat.js"),
       this.file("node_modules/dayjs/plugin/relativeTime.js"),
-      this.file(`node_modules/dayjs/locale/${config.language}.js`),
-      this.file("core/PtDomBuilder.js"),
-      this.file("core/PtTableBodyBuilder.js")
+      this.file(`node_modules/dayjs/locale/${config.language}.js`)
     ];
   },
 

@@ -1,8 +1,17 @@
-/* global PtTableBodyBuilder */
-// eslint-disable-next-line no-unused-vars
-class PtDomBuilder {
-  constructor (config) {
+import PtTableBodyBuilder from "./PtTableBodyBuilder.mjs";
+
+/**
+ * Builds the DOM structure for the departure display.
+ * Uses dependency injection for dayjs to enable testing and ESM compatibility.
+ */
+export default class PtDomBuilder {
+  /**
+   * @param {object} config - Module configuration
+   * @param {object} dayjsInstance - dayjs instance with plugins loaded
+   */
+  constructor (config, dayjsInstance) {
     this.config = config;
+    this.dayjs = dayjsInstance;
 
     this.headingSymbols = {
       direction: "fa fa-exchange",
@@ -78,7 +87,7 @@ class PtDomBuilder {
       table.appendChild(tableHeader);
     }
 
-    const tableBodyBuilder = new PtTableBodyBuilder(this.config);
+    const tableBodyBuilder = new PtTableBodyBuilder(this.config, this.dayjs);
     const tableBody = tableBodyBuilder.getDeparturesTableBody(
       departures,
       noDepartureMessage

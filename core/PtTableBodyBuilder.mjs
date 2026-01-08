@@ -1,13 +1,16 @@
-/* global dayjs */
-
-dayjs.extend(window.dayjs_plugin_relativeTime);
-dayjs.extend(window.dayjs_plugin_localizedFormat);
-
-// eslint-disable-next-line no-unused-vars
-class PtTableBodyBuilder {
-  constructor (config) {
+/**
+ * Builds the table body for departure display.
+ * Uses dependency injection for dayjs to enable testing and ESM compatibility.
+ */
+export default class PtTableBodyBuilder {
+  /**
+   * @param {object} config - Module configuration
+   * @param {object} dayjsInstance - dayjs instance with plugins loaded
+   */
+  constructor (config, dayjsInstance) {
     this.config = config;
-    this.remarksCollector = [];  // the array with warnings that are already displayed
+    this.dayjs = dayjsInstance;
+    this.remarksCollector = []; // the array with warnings that are already displayed
   }
 
   getDeparturesTableBody (departures, noDepartureMessage) {
@@ -116,7 +119,7 @@ class PtTableBodyBuilder {
             ${remark.text.replaceAll("\n", " ")}`;
 
         if (this.config.showWarningsOnce === true) {
-        // Add remark.summary and remark.text to the remarksCollector array. Elements in this array will not be displayed again
+          // Add remark.summary and remark.text to the remarksCollector array. Elements in this array will not be displayed again
           this.remarksCollector.push(remark.summary, remark.text);
         }
       }
@@ -211,7 +214,7 @@ class PtTableBodyBuilder {
     const time = this.getDisplayDepartureTime(departure, delay);
     const cell = document.createElement("td");
 
-    if (dayjs(departure).isValid()) {
+    if (this.dayjs(departure).isValid()) {
       cell.className = "mmm-pth-time-cell";
       cell.appendChild(document.createTextNode(time));
 
@@ -261,7 +264,7 @@ class PtTableBodyBuilder {
   }
 
   getDisplayDepartureTime (when, delay) {
-    let time = dayjs(when);
+    let time = this.dayjs(when);
     let format = "HH:mm";
 
     if (this.config.timeFormat === 12) {
@@ -269,11 +272,11 @@ class PtTableBodyBuilder {
     }
 
     if (this.config.showAbsoluteTime) {
-      time = dayjs(when).subtract(delay, "seconds");
+      time = this.dayjs(when).subtract(delay, "seconds");
       return time.format(format);
     }
 
-    if (dayjs(when).diff(dayjs()) > this.config.showRelativeTimeOnlyUnder) {
+    if (this.dayjs(when).diff(this.dayjs()) > this.config.showRelativeTimeOnlyUnder) {
       return time.format(format);
     }
 
@@ -329,7 +332,7 @@ class PtTableBodyBuilder {
    * This function returns the product name. In the two examples already mentioned
    * (`RB50` and` RB 50`) the string `RB` would be returned. If there is no product name
    * (if the line name starts with a digit), `undefined` is returned.
-   * @param  {string} lineName    The line name as it was delivered by the HAFAS API.
+   * @param {string} lineName    The line name as it was delivered by the HAFAS API.
    * @returns {string} product     The product ('RB', 'S', 'U', ...).
    */
   getProduct (lineName) {
@@ -354,7 +357,7 @@ class PtTableBodyBuilder {
    *
    * Class names are returned depending on the line name. This enables CSS styles
    * to be defined on the basis of various properties.
-   * @param  {string} lineName     The linename as it was delivered by the HAFAS API.
+   * @param {string} lineName     The linename as it was delivered by the HAFAS API.
    * @returns {string} classNames   Series of class names
    */
   getColoredCssClass (lineName) {

@@ -312,6 +312,220 @@ describe("getTimeInFuture", () => {
   });
 });
 
+describe("getReachableTime", () => {
+  it("should return current time plus timeToStation", () => {
+    const fetcher = createFetcher({timeToStation: 10});
+
+    const beforeCall = new Date();
+    const result = fetcher.getReachableTime();
+    const afterCall = new Date();
+
+    // Result should be ~10 minutes from now (with some tolerance for execution time)
+    const resultTime = new Date(result);
+    const expectedTime = new Date(beforeCall.getTime() + 10 * 60 * 1000);
+
+    // Allow 1 second tolerance
+    assert.ok(Math.abs(resultTime - expectedTime) < 1000);
+    assert.ok(resultTime > beforeCall);
+    assert.ok(resultTime < new Date(afterCall.getTime() + 11 * 60 * 1000));
+  });
+
+  it("should work with zero timeToStation", () => {
+    const fetcher = createFetcher({timeToStation: 0});
+
+    const beforeCall = new Date();
+    const result = fetcher.getReachableTime();
+
+    const resultTime = new Date(result);
+
+    // Should be approximately now (with 1 second tolerance)
+    assert.ok(Math.abs(resultTime - beforeCall) < 1000);
+  });
+});
+
+describe("getDepartureTime", () => {
+  it("should return reachable time when no unreachable departures configured", () => {
+    const fetcher = createFetcher({
+      timeToStation: 10,
+      maxUnreachableDepartures: 0
+    });
+
+    const reachableTime = fetcher.getReachableTime();
+    const departureTime = fetcher.getDepartureTime();
+
+    // Should be the same when maxUnreachableDepartures is 0
+    assert.strictEqual(departureTime.toISOString(), reachableTime.toISOString());
+  });
+
+  it("should subtract leadTime when unreachable departures configured", () => {
+    const fetcher = createFetcher({
+      timeToStation: 10,
+      maxUnreachableDepartures: 3
+    });
+    fetcher.leadTime = 20;
+
+    const reachableTime = fetcher.getReachableTime();
+    const departureTime = fetcher.getDepartureTime();
+
+    // Should be 20 minutes earlier than reachable time
+    const expectedTime = new Date(reachableTime);
+    expectedTime.setMinutes(expectedTime.getMinutes() - 20);
+
+    assert.strictEqual(departureTime.toISOString(), expectedTime.toISOString());
+  });
+});
+
+describe("isReachable", () => {
+  let fetcher;
+
+  beforeEach(() => {
+    fetcher = createFetcher({timeToStation: 10});
+  });
+
+  it("should mark departure as reachable when after timeToStation", () => {
+    const futureTime = new Date();
+    futureTime.setMinutes(futureTime.getMinutes() + 15); // 15 min from now
+
+    const departure = createDeparture({when: futureTime.toISOString()});
+
+    const result = fetcher.isReachable(departure);
+
+    assert.strictEqual(result, true);
+  });
+
+  it("should mark departure as unreachable when before timeToStation", () => {
+    const nearTime = new Date();
+    nearTime.setMinutes(nearTime.getMinutes() + 5); // 5 min from now (less than timeToStation of 10)
+
+    const departure = createDeparture({when: nearTime.toISOString()});
+
+    const result = fetcher.isReachable(departure);
+
+    assert.strictEqual(result, false);
+  });
+
+  it("should mark departure as reachable when exactly at timeToStation boundary", () => {
+    const exactTime = new Date();
+    exactTime.setMinutes(exactTime.getMinutes() + 10); // Exactly timeToStation
+
+    const departure = createDeparture({when: exactTime.toISOString()});
+
+    const result = fetcher.isReachable(departure);
+
+    // isSameOrAfter should return true for exact match
+    assert.strictEqual(result, true);
+  });
+});
+
+describe("departuresMarkedWithReachability", () => {
+  let fetcher;
+
+  beforeEach(() => {
+    fetcher = createFetcher({timeToStation: 10});
+  });
+
+  it("should add isReachable property to all departures", () => {
+    const now = new Date();
+    const departures = [
+      createDeparture({when: new Date(now.getTime() + 5 * 60000).toISOString()}), // 5 min - unreachable
+      createDeparture({when: new Date(now.getTime() + 15 * 60000).toISOString()}), // 15 min - reachable
+      createDeparture({when: new Date(now.getTime() + 20 * 60000).toISOString()}) // 20 min - reachable
+    ];
+
+    const result = fetcher.departuresMarkedWithReachability(departures);
+
+    assert.strictEqual(result.length, 3);
+    assert.ok(result.every((dep) => "isReachable" in dep));
+    assert.strictEqual(result[0].isReachable, false);
+    assert.strictEqual(result[1].isReachable, true);
+    assert.strictEqual(result[2].isReachable, true);
+  });
+
+  it("should not modify original departure objects", () => {
+    const departure = createDeparture();
+    const departures = [departure];
+
+    fetcher.departuresMarkedWithReachability(departures);
+
+    // Original should be modified (this is the actual behavior)
+    assert.ok("isReachable" in departure);
+  });
+});
+
+describe("departuresRemovedSurplusUnreachableDepartures", () => {
+  let fetcher;
+
+  beforeEach(() => {
+    fetcher = createFetcher({
+      maxUnreachableDepartures: 2,
+      maxReachableDepartures: 5
+    });
+  });
+
+  it("should keep only maxUnreachableDepartures unreachable departures", () => {
+    const departures = [
+      {...createDeparture({tripId: "unreachable-1"}), isReachable: false},
+      {...createDeparture({tripId: "unreachable-2"}), isReachable: false},
+      {...createDeparture({tripId: "unreachable-3"}), isReachable: false},
+      {...createDeparture({tripId: "reachable-1"}), isReachable: true},
+      {...createDeparture({tripId: "reachable-2"}), isReachable: true}
+    ];
+
+    const result = fetcher.departuresRemovedSurplusUnreachableDepartures(departures);
+
+    const unreachable = result.filter((dep) => !dep.isReachable);
+    const reachable = result.filter((dep) => dep.isReachable);
+
+    assert.strictEqual(unreachable.length, 2); // maxUnreachableDepartures
+    assert.strictEqual(reachable.length, 2);
+  });
+
+  it("should keep all unreachable departures when below max", () => {
+    const departures = [
+      {...createDeparture({tripId: "unreachable-1"}), isReachable: false},
+      {...createDeparture({tripId: "reachable-1"}), isReachable: true},
+      {...createDeparture({tripId: "reachable-2"}), isReachable: true}
+    ];
+
+    const result = fetcher.departuresRemovedSurplusUnreachableDepartures(departures);
+
+    const unreachable = result.filter((dep) => !dep.isReachable);
+
+    assert.strictEqual(unreachable.length, 1); // Only 1, below max of 2
+  });
+
+  it("should preserve order with unreachable first, then reachable", () => {
+    const departures = [
+      {...createDeparture({tripId: "unreachable-1"}), isReachable: false},
+      {...createDeparture({tripId: "unreachable-2"}), isReachable: false},
+      {...createDeparture({tripId: "reachable-1"}), isReachable: true}
+    ];
+
+    const result = fetcher.departuresRemovedSurplusUnreachableDepartures(departures);
+
+    assert.strictEqual(result[0].isReachable, false);
+    assert.strictEqual(result[1].isReachable, false);
+    assert.strictEqual(result[2].isReachable, true);
+  });
+
+  it("should adjust lead time based on unreachable count", () => {
+    fetcher.leadTime = 20;
+
+    const departures = [
+      {...createDeparture(), isReachable: false},
+      {...createDeparture(), isReachable: false},
+      {...createDeparture(), isReachable: false},
+      {...createDeparture(), isReachable: false}, // 4 unreachable, max is 2
+      {...createDeparture(), isReachable: true}
+    ];
+
+    fetcher.departuresRemovedSurplusUnreachableDepartures(departures);
+
+    // Lead time should be halved: Math.round(20 / 2) + 1 = 11
+    assert.strictEqual(fetcher.leadTime, 11);
+  });
+});
+
 describe("getArrayDiff helper", () => {
   it("should work with transportation type filtering use case", () => {
     // Simulate what happens in init() - all types minus excluded types

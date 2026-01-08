@@ -25,7 +25,7 @@ export default class DepartureFetcher {
    *          stationID: *a valid station id*,
    *          timeToStation: *an integer describing how long it takes to get to the station (in minutes)*,
    *          timeInFuture: *an integer describing how far in the future the departure can lie*
-   *          direction: *an array of station ids*,
+   *          directions: *an array of station ids*,
    *          ignoredLines: *an array of line names which are to be ignored*,
    *          excludedTransportationTypes: *an array of product names which are not to be shown*,
    *          maxReachableDepartures: *an integer describing how many departures should be fetched*,
@@ -80,29 +80,66 @@ export default class DepartureFetcher {
   }
 
   async fetchDepartures () {
-    const options = {
-      direction: this.config.direction,
+    const directions = Array.isArray(this.config.directions) && this.config.directions.length > 0
+      ? this.config.directions
+      : [null];
+
+    const optionsBase = {
       duration: this.getTimeInFuture(),
       when: this.getDepartureTime()
     };
-    const departures = await this.hafasClient.departures(
-      this.config.stationID,
-      options
-    );
 
-    const maxElements = this.config.maxReachableDepartures + this.config.maxUnreachableDepartures;
-    let filteredDepartures = this.filterByTransportationTypes(departures.departures);
+    const requests = directions.map((direction) => {
+      const options = direction
+        ? {...optionsBase, direction}
+        : {...optionsBase};
 
+      return this.hafasClient.departures(this.config.stationID, options);
+    });
+    const results = await Promise.allSettled(requests);
+
+    const allDepartures = [];
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        allDepartures.push(...result.value.departures);
+      } else {
+        // optional logging
+        Log.error(
+          "[MMM-PublicTransportHafas] Departure request failed:",
+          result.reason?.hafasMessage ?? result.reason?.message ?? "Unknown HAFAS error"
+        );
+      }
+    }
+
+    allDepartures.sort((item1, item2) => new Date(item1.when) - new Date(item2.when));
+
+    const seen = new Set();
+    let filteredDepartures = allDepartures.filter((dep) => {
+      const id = `${dep.when}-${dep.stop.id}-${dep.line?.id}`;
+      if (seen.has(id)) {
+        return false;
+      }
+      seen.add(id);
+      return true;
+    });
+
+
+    const maxElements =
+      this.config.maxReachableDepartures +
+      this.config.maxUnreachableDepartures;
+
+    filteredDepartures = this.filterByTransportationTypes(filteredDepartures);
     filteredDepartures = this.filterByIgnoredLines(filteredDepartures);
+
     if (this.config.ignoreRelatedStations) {
       filteredDepartures = this.filterByStopId(filteredDepartures);
     }
 
     filteredDepartures = this.departuresMarkedWithReachability(filteredDepartures);
     filteredDepartures = this.departuresRemovedSurplusUnreachableDepartures(filteredDepartures);
-    filteredDepartures = filteredDepartures.slice(0, maxElements);
 
-    return filteredDepartures;
+    return filteredDepartures.slice(0, maxElements);
   }
 
   getDepartureTime () {

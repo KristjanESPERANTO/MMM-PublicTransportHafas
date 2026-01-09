@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.0.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.2...v4.0.0) (2026-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate from dayjs to Temporal API
+
+### Added
+
+* migrate from dayjs to Temporal API ([a8772ec](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/a8772ecfe1b87a406342bb26c2e45b3fe82e4947)), closes [#253](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/issues/253)
+* modify direction filter to handle multiple IDs ([#253](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/issues/253)) ([37e01cf](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/37e01cf9eb1bcd3a8ee857c0ec44acb6a1c9a31f))
+
+
+### Documentation
+
+* add release command to README ([a4adb7f](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/a4adb7fa2ad2f3649ffc24586b00b5beec76d8fe))
+
+
+### Chores
+
+* change runner from ubuntu-latest to ubuntu-slim in workflow files ([da29b49](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/da29b49a7904c3f83acdad289f54ace662ef0981))
+* handle spelling issues ([50033b7](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/50033b702a117ca7eaaf5cedd5d33a635097998f))
+* update actions/checkout to v6 in workflow files ([57361aa](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/57361aa2dd3cb1f8ed58eb473bd5bf271e723c70))
+* update devDependencies ([24546b9](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/24546b9d6e0804898893e9e3ca9ab453cbc425c7))
+
+
+### Code Refactoring
+
+* convert DOM builders to ESM modules ([be58162](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/be58162f44c98b8352a015ff0e504356e30e7001))
+* extract config validation into testable module ([3cb19e1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/3cb19e182c848c386dcec5f5e51476bc705c3872))
+* improve robustness of multi-direction feature ([971d086](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/971d086760791a9975c8bf8983fc6932d147df1e))
+* move excludeDirections filter to backend ([8566aa3](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/8566aa35ad3d18067d04f91435928c34e5c4d413))
+
+
+### Tests
+
+* add time calculation and reachability tests ([7794aaf](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/7794aafc979156aef4a28e40d58167b0b4fe5ce3))
+* add unit tests using node:test ([9420064](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/942006492041232c2db1e1d82eff541095a0c0c3))
+
 ## [3.5.2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.1...v3.5.2) (2026-01-01)
 
 ### Chores

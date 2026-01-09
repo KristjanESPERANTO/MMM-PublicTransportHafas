@@ -153,6 +153,7 @@ export default class DepartureFetcher {
     }
 
     filteredDepartures = this.filterByExcludedDirections(filteredDepartures);
+    filteredDepartures = this.filterByPlatforms(filteredDepartures);
     filteredDepartures = this.departuresMarkedWithReachability(filteredDepartures);
     filteredDepartures = this.departuresRemovedSurplusUnreachableDepartures(filteredDepartures);
 
@@ -219,6 +220,17 @@ export default class DepartureFetcher {
     }
 
     return departures.filter((departure) => !this.config.excludeDirections.includes(departure.direction));
+  }
+
+  filterByPlatforms (departures) {
+    if (!this.config.platformsToShow || this.config.platformsToShow.length === 0) {
+      return departures;
+    }
+
+    return departures.filter((departure) => {
+      const platform = departure.platform ?? departure.plannedPlatform;
+      return platform && this.config.platformsToShow.includes(platform);
+    });
   }
 
   departuresMarkedWithReachability (departures) {

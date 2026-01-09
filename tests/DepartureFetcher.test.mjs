@@ -286,6 +286,92 @@ describe("filterByExcludedDirections", () => {
 });
 
 // =============================================================================
+// Tests: filterByPlatforms
+// =============================================================================
+
+describe("filterByPlatforms", () => {
+  it("should filter departures by platform", () => {
+    const fetcher = createFetcher({platformsToShow: ["A", "B"]});
+    const departures = [
+      createDeparture({platform: "A"}),
+      createDeparture({platform: "B"}),
+      createDeparture({platform: "C"}),
+      createDeparture({platform: "D"})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 2);
+    assert.strictEqual(result[0].platform, "A");
+    assert.strictEqual(result[1].platform, "B");
+  });
+
+  it("should return all departures when platformsToShow is empty", () => {
+    const fetcher = createFetcher({platformsToShow: []});
+    const departures = [
+      createDeparture({platform: "A"}),
+      createDeparture({platform: "B"})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 2);
+  });
+
+  it("should return all departures when platformsToShow is undefined", () => {
+    const fetcher = createFetcher({});
+    const departures = [
+      createDeparture({platform: "A"}),
+      createDeparture({platform: "B"})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 2);
+  });
+
+  it("should use plannedPlatform if platform is null", () => {
+    const fetcher = createFetcher({platformsToShow: ["A"]});
+    const departures = [
+      createDeparture({platform: null, plannedPlatform: "A"}),
+      createDeparture({platform: null, plannedPlatform: "B"})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].plannedPlatform, "A");
+  });
+
+  it("should filter out departures with no platform information", () => {
+    const fetcher = createFetcher({platformsToShow: ["A"]});
+    const departures = [
+      createDeparture({platform: "A"}),
+      createDeparture({platform: null, plannedPlatform: null}),
+      createDeparture({})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].platform, "A");
+  });
+
+  it("should be case-sensitive", () => {
+    const fetcher = createFetcher({platformsToShow: ["a"]});
+    const departures = [
+      createDeparture({platform: "A"}),
+      createDeparture({platform: "a"})
+    ];
+
+    const result = fetcher.filterByPlatforms(departures);
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].platform, "a");
+  });
+});
+
+// =============================================================================
 // Tests: adjustLeadTime
 // =============================================================================
 

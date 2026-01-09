@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.1.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.0.0...v4.1.0) (2026-01-09)
+
+
+### Added
+
+* add platformsToShow filter option ([cb5179a](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/cb5179aba65fe77c18b5525107d06de6cd014521)), closes [#21](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/issues/21)
+
+
+### Chores
+
+* update devDependencies ([2850378](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/2850378dab2150b9007bab8cdc217f6d35b59c25))
+
+
+### Code Refactoring
+
+* replace temporal-kit with temporal-polyfill ([967472b](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/967472bb5ae909a21c14bfea6c5769c15fc140d6))
+
 ## [4.0.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v3.5.2...v4.0.0) (2026-01-09)
 
 

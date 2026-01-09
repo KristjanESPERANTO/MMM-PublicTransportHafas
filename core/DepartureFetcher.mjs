@@ -1,7 +1,19 @@
 import "temporal-polyfill/global";
-import Log from "../../../js/logger.js";
-
 import packageJson from "../package.json" with {type: "json"};
+
+/**
+ * Lazy logger initialization to avoid top-level await
+ * Falls back to console in test environments
+ */
+let loggerInstance;
+function getLogger () {
+  if (!loggerInstance) {
+    loggerInstance = typeof globalThis.Log === "undefined"
+      ? console
+      : globalThis.Log;
+  }
+  return loggerInstance;
+}
 
 /**
  * Helper function to determine the difference between two arrays.
@@ -40,14 +52,14 @@ export default class DepartureFetcher {
     let createClient;
     let profile;
     if (this.config.hafasProfile === "db" || this.config.hafasProfile === "dbweb") {
-      Log.info("Using vendo client");
+      getLogger().info("Using vendo client");
       const vendoClient = await import("db-vendo-client");
       const createVendoClient = vendoClient.createClient;
       createClient = createVendoClient;
       const vendo = await import(`db-vendo-client/p/${this.config.hafasProfile}/index.js`);
       profile = vendo.profile;
     } else {
-      Log.info("Using HAFAS client");
+      getLogger().info("Using HAFAS client");
       const hafasClient = await import("hafas-client");
       const createHafasClient = hafasClient.createClient;
       createClient = createHafasClient;
@@ -110,7 +122,7 @@ export default class DepartureFetcher {
         allDepartures.push(...result.value.departures);
       } else {
         failures.push({direction: directions[index], error: result.reason});
-        Log.error(
+        getLogger().error(
           `[MMM-PublicTransportHafas] Failed to fetch departures for direction ${directions[index]}:`,
           result.reason
         );
@@ -119,7 +131,7 @@ export default class DepartureFetcher {
 
     // Continue with successful results even if some failed
     if (failures.length > 0) {
-      Log.warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
+      getLogger().warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
     }
 
     // Robust sorting with null checks (HAFAS may return plannedWhen instead of when)
@@ -257,7 +269,7 @@ export default class DepartureFetcher {
     const reachableDepartures = departures.filter((departure) => departure.isReachable);
 
     // Output reachableDepartures for debugging
-    Log.debug(reachableDepartures);
+    getLogger().debug(reachableDepartures);
 
     // Merge unreachable and reachable departures
     const result = [].concat(unreachableDepartures, reachableDepartures);

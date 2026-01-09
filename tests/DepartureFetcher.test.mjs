@@ -1,11 +1,7 @@
 import {beforeEach, describe, it} from "node:test";
-// Mock the logger before importing DepartureFetcher
-import Log from "./__mocks__/logger.mjs";
 import assert from "node:assert";
 
-globalThis.Log = Log;
-
-// Import DepartureFetcher after mocking the logger
+// Import DepartureFetcher (uses console as fallback logger in test environment)
 const DepartureFetcher = (await import("../core/DepartureFetcher.mjs")).default;
 
 /**

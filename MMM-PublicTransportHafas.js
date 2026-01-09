@@ -1,4 +1,4 @@
-/* global dayjs Module Log config */
+/* global Module Log config */
 
 /*
  * UserPresence Management (PIR sensor)
@@ -17,6 +17,7 @@ Module.register("MMM-PublicTransportHafas", {
     hidden: false,
     updatesEvery: 120,                  // How often should the table be updated in s?
     timeFormat: config.timeFormat,      // Since we don't use moment.js, we need to handle the time format ourselves. This is the default time format of the mirror.
+    language: config.language,          // Use MagicMirror's language setting for date/time formatting
 
     // Header
     headerPrefix: "",
@@ -24,7 +25,12 @@ Module.register("MMM-PublicTransportHafas", {
 
     // Display last update time
     displayLastUpdate: true,            // Add line after the tasks with the last server update time
-    displayLastUpdateFormat: "dd - HH:mm:ss", // Format to display the last update. See dayjs.js documentation for all display possibilities
+    displayLastUpdateOptions: {         // Intl.DateTimeFormat options for last update display
+      weekday: "short",                 // e.g., "Mon" or "Mo"
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    },
 
     // Error handling
     discardSocketErrorThreshold: 3,     // How many consecutive socket errors should be tolerated before showing an error message? (0 = show errors immediately)
@@ -77,13 +83,11 @@ Module.register("MMM-PublicTransportHafas", {
 
     await this.sanitizeConfig();
 
-    // Load ESM DOM builder module and initialize with dayjs
-    // dayjs plugins are loaded globally via getScripts()
-    dayjs.extend(window.dayjs_plugin_relativeTime);
-    dayjs.extend(window.dayjs_plugin_localizedFormat);
-
+    // Load DOM builder ESM module
     const {default: PtDomBuilder} = await import("./core/PtDomBuilder.mjs");
-    this.domBuilder = new PtDomBuilder(this.config, dayjs);
+    const {formatTime, formatDateTime, fromUnixSeconds} = await import("./core/TemporalHelper.mjs");
+    this.TemporalHelper = {formatTime, formatDateTime, fromUnixSeconds};
+    this.domBuilder = new PtDomBuilder(this.config);
 
     if (!this.config.stationID) {
       this.error.message = this.translate("NO_STATION_ID_SET");
@@ -128,8 +132,7 @@ Module.register("MMM-PublicTransportHafas", {
       }
     }, 30_000);
 
-    // Set locale
-    dayjs.locale(config.language);
+    // Temporal uses Intl for locale-specific formatting (no separate config needed)
   },
 
   suspend () {
@@ -244,9 +247,14 @@ Module.register("MMM-PublicTransportHafas", {
         updateText = `Update (socket issues: ${this.errorCount})`;
       }
 
-      updateInfo.textContent = `${updateText}: ${dayjs
-        .unix(this.lastUpdate)
-        .format(this.config.displayLastUpdateFormat)}`;
+      const updateTime = this.TemporalHelper.fromUnixSeconds(this.lastUpdate);
+      const formattedTime = this.TemporalHelper.formatDateTime(
+        updateTime,
+        this.config.language,
+        this.config.displayLastUpdateOptions
+      );
+
+      updateInfo.textContent = `${updateText}: ${formattedTime}`;
       wrapper.appendChild(updateInfo);
     }
 
@@ -265,12 +273,7 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getScripts () {
-    return [
-      this.file("node_modules/dayjs/dayjs.min.js"),
-      this.file("node_modules/dayjs/plugin/localizedFormat.js"),
-      this.file("node_modules/dayjs/plugin/relativeTime.js"),
-      this.file(`node_modules/dayjs/locale/${config.language}.js`)
-    ];
+    return [this.file("node_modules/temporal-kit/dist/temporal-kit.browser.polyfilled.global.js")];
   },
 
   getTranslations () {
@@ -294,11 +297,7 @@ Module.register("MMM-PublicTransportHafas", {
             this.lastUpdate = Date.now() / 1_000; // Save the timestamp of the last update to be able to display it
           }
 
-          Log.log(`[MMM-PublicTransportHafas] Update OK, station: ${
-            this.config.stationName
-          } at: ${dayjs
-            .unix(this.lastUpdate)
-            .format(this.config.displayLastUpdateFormat)}`);
+          Log.log(`[MMM-PublicTransportHafas] Update OK, station: ${this.config.stationName} at: ${new Date().toLocaleTimeString()}`);
 
           // Reset error object and error count on successful fetch
           this.error = {};
@@ -317,14 +316,8 @@ Module.register("MMM-PublicTransportHafas", {
             this.departures = [];
           }
 
-          // Only show the error message if threshold is exceeded
-          if (this.errorCount > this.config.discardSocketErrorThreshold) {
-            this.updateDom(this.config.animationSpeed);
-          } else {
-            // Update DOM to show socket issue count in "Last update" line
-            this.updateDom(this.config.animationSpeed);
-          }
-
+          // Always update DOM (either to show error or socket issue count)
+          this.updateDom(this.config.animationSpeed);
           break;
       }
     }

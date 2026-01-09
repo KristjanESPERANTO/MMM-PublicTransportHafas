@@ -375,30 +375,30 @@ describe("getReachableTime", () => {
   it("should return current time plus timeToStation", () => {
     const fetcher = createFetcher({timeToStation: 10});
 
-    const beforeCall = new Date();
+    const beforeCall = Temporal.Now.instant();
     const result = fetcher.getReachableTime();
-    const afterCall = new Date();
 
     // Result should be ~10 minutes from now (with some tolerance for execution time)
-    const resultTime = new Date(result);
-    const expectedTime = new Date(beforeCall.getTime() + 10 * 60 * 1000);
+    const resultInstant = result.toInstant();
+    const expectedInstant = beforeCall.add({minutes: 10});
 
     // Allow 1 second tolerance
-    assert.ok(Math.abs(resultTime - expectedTime) < 1000);
-    assert.ok(resultTime > beforeCall);
-    assert.ok(resultTime < new Date(afterCall.getTime() + 11 * 60 * 1000));
+    const diff = Math.abs(resultInstant.epochMilliseconds - expectedInstant.epochMilliseconds);
+    assert.ok(diff < 1000);
+    assert.ok(Temporal.Instant.compare(resultInstant, beforeCall) > 0);
   });
 
   it("should work with zero timeToStation", () => {
     const fetcher = createFetcher({timeToStation: 0});
 
-    const beforeCall = new Date();
+    const beforeCall = Temporal.Now.instant();
     const result = fetcher.getReachableTime();
 
-    const resultTime = new Date(result);
+    const resultInstant = result.toInstant();
 
     // Should be approximately now (with 1 second tolerance)
-    assert.ok(Math.abs(resultTime - beforeCall) < 1000);
+    const diff = Math.abs(resultInstant.epochMilliseconds - beforeCall.epochMilliseconds);
+    assert.ok(diff < 1000);
   });
 });
 
@@ -413,7 +413,7 @@ describe("getDepartureTime", () => {
     const departureTime = fetcher.getDepartureTime();
 
     // Should be the same when maxUnreachableDepartures is 0
-    assert.strictEqual(departureTime.toISOString(), reachableTime.toISOString());
+    assert.strictEqual(departureTime.toString(), reachableTime.toString());
   });
 
   it("should subtract leadTime when unreachable departures configured", () => {
@@ -423,14 +423,15 @@ describe("getDepartureTime", () => {
     });
     fetcher.leadTime = 20;
 
-    const reachableTime = fetcher.getReachableTime();
     const departureTime = fetcher.getDepartureTime();
+    const reachableTime = fetcher.getReachableTime();
 
-    // Should be 20 minutes earlier than reachable time
-    const expectedTime = new Date(reachableTime);
-    expectedTime.setMinutes(expectedTime.getMinutes() - 20);
+    // Departure time should be ~20 minutes earlier than reachable time
+    // Calculate the difference in minutes
+    const diffMs = reachableTime.toInstant().epochMilliseconds - departureTime.toInstant().epochMilliseconds;
+    const diffMinutes = Math.round(diffMs / 60000);
 
-    assert.strictEqual(departureTime.toISOString(), expectedTime.toISOString());
+    assert.strictEqual(diffMinutes, 20);
   });
 });
 

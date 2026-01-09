@@ -2,16 +2,13 @@ import PtTableBodyBuilder from "./PtTableBodyBuilder.mjs";
 
 /**
  * Builds the DOM structure for the departure display.
- * Uses dependency injection for dayjs to enable testing and ESM compatibility.
  */
 export default class PtDomBuilder {
   /**
    * @param {object} config - Module configuration
-   * @param {object} dayjsInstance - dayjs instance with plugins loaded
    */
-  constructor (config, dayjsInstance) {
+  constructor (config) {
     this.config = config;
-    this.dayjs = dayjsInstance;
 
     this.headingSymbols = {
       direction: "fa fa-exchange",
@@ -87,7 +84,7 @@ export default class PtDomBuilder {
       table.appendChild(tableHeader);
     }
 
-    const tableBodyBuilder = new PtTableBodyBuilder(this.config, this.dayjs);
+    const tableBodyBuilder = new PtTableBodyBuilder(this.config);
     const tableBody = tableBodyBuilder.getDeparturesTableBody(
       departures,
       noDepartureMessage

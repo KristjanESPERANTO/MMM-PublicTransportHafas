@@ -1,9 +1,7 @@
+import "temporal-kit/polyfilled";
 import Log from "../../../js/logger.js";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter.js";
-import packageJson from "../package.json" with {type: "json"};
 
-dayjs.extend(isSameOrAfter);
+import packageJson from "../package.json" with {type: "json"};
 
 /**
  * Helper function to determine the difference between two arrays.
@@ -87,9 +85,11 @@ export default class DepartureFetcher {
 
     // Build promises for parallel API calls
     const promises = directions.map((direction) => {
+      const departureTime = this.getDepartureTime();
       const options = {
         duration: this.getTimeInFuture(),
-        when: this.getDepartureTime()
+        // Convert Temporal to Date for hafas-client compatibility
+        when: new Date(departureTime.epochMilliseconds)
       };
 
       if (direction) {
@@ -163,14 +163,14 @@ export default class DepartureFetcher {
     let departureTime = this.getReachableTime();
 
     if (this.config.maxUnreachableDepartures > 0) {
-      departureTime = departureTime.subtract(this.leadTime, "minutes");
+      departureTime = departureTime.subtract({minutes: this.leadTime});
     }
 
     return departureTime;
   }
 
   getReachableTime () {
-    return dayjs().add(this.config.timeToStation, "minutes");
+    return Temporal.Now.zonedDateTimeISO().add({minutes: this.config.timeToStation});
   }
 
   getTimeInFuture () {
@@ -268,6 +268,8 @@ export default class DepartureFetcher {
   }
 
   isReachable (departure) {
-    return dayjs(departure.when).isSameOrAfter(this.getReachableTime());
+    const departureInstant = Temporal.Instant.from(departure.when);
+    const reachableInstant = this.getReachableTime().toInstant();
+    return Temporal.Instant.compare(departureInstant, reachableInstant) >= 0;
   }
 }

@@ -1,15 +1,15 @@
+import * as TemporalHelper from "./TemporalHelper.mjs";
+
 /**
  * Builds the table body for departure display.
- * Uses dependency injection for dayjs to enable testing and ESM compatibility.
+ * Uses Temporal API for modern date/time handling.
  */
 export default class PtTableBodyBuilder {
   /**
    * @param {object} config - Module configuration
-   * @param {object} dayjsInstance - dayjs instance with plugins loaded
    */
-  constructor (config, dayjsInstance) {
+  constructor (config) {
     this.config = config;
-    this.dayjs = dayjsInstance;
     this.remarksCollector = []; // the array with warnings that are already displayed
   }
 
@@ -195,13 +195,7 @@ export default class PtTableBodyBuilder {
       }
 
       case "platform": {
-        let {platform} = departure;
-        if (platform === null) {
-          platform = departure.plannedPlatform;
-        }
-        if (platform === null) {
-          platform = "";
-        }
+        const platform = departure.platform ?? departure.plannedPlatform ?? "";
         cell = this.getPlatformCell(platform);
         break;
       }
@@ -210,11 +204,11 @@ export default class PtTableBodyBuilder {
     return cell;
   }
 
-  getTimeCell (departure, delay) {
-    const time = this.getDisplayDepartureTime(departure, delay);
+  getTimeCell (when, delay) {
+    const time = this.getDisplayDepartureTime(when, delay);
     const cell = document.createElement("td");
 
-    if (this.dayjs(departure).isValid()) {
+    if (TemporalHelper.isValidTemporal(when)) {
       cell.className = "mmm-pth-time-cell";
       cell.appendChild(document.createTextNode(time));
 
@@ -264,23 +258,23 @@ export default class PtTableBodyBuilder {
   }
 
   getDisplayDepartureTime (when, delay) {
-    let time = this.dayjs(when);
-    let format = "HH:mm";
-
-    if (this.config.timeFormat === 12) {
-      format = "h:mm A";
-    }
+    const instant = Temporal.Instant.from(when);
+    const now = Temporal.Now.instant();
 
     if (this.config.showAbsoluteTime) {
-      time = this.dayjs(when).subtract(delay, "seconds");
-      return time.format(format);
+      // Subtract delay to show scheduled time
+      const adjustedInstant = instant.subtract(Temporal.Duration.from({seconds: delay ?? 0}));
+      return TemporalHelper.formatTime(adjustedInstant, this.config.language ?? "en", this.config.timeFormat);
     }
 
-    if (this.dayjs(when).diff(this.dayjs()) > this.config.showRelativeTimeOnlyUnder) {
-      return time.format(format);
+    // Calculate difference in milliseconds
+    const diffMs = instant.epochMilliseconds - now.epochMilliseconds;
+
+    if (diffMs > this.config.showRelativeTimeOnlyUnder) {
+      return TemporalHelper.formatTime(instant, this.config.language ?? "en", this.config.timeFormat);
     }
 
-    return time.fromNow();
+    return TemporalHelper.formatRelativeTime(instant, this.config.language ?? "en");
   }
 
   getLineId (lineName) {

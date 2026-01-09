@@ -273,7 +273,7 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getScripts () {
-    return [this.file("node_modules/temporal-kit/dist/temporal-kit.browser.polyfilled.global.js")];
+    return [this.file("node_modules/temporal-polyfill/global.min.js")];
   },
 
   getTranslations () {

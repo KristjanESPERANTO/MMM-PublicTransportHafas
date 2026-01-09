@@ -1,4 +1,4 @@
-import "temporal-kit/polyfilled";
+import "temporal-polyfill/global";
 import Log from "../../../js/logger.js";
 
 import packageJson from "../package.json" with {type: "json"};

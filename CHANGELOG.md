@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.1.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.1.0...v4.1.1) (2026-01-12)
+
+
+### Fixed
+
+* handle null values and HAFAS API format changes ([ada88b2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/ada88b25c53b66d6b1b1f1578d10aff9f0098b7f))
+* use globalThis.Log to avoid top-level await ([8237330](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/823733038cf1f6a25f5fe2fa9ae71111f00f6672))
+
+
+### Chores
+
+* add unit tests step to automated tests workflow ([d3448f0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/d3448f07f5e6ed4d6f415966730845ada6aecb9d))
+* add vbn demo example ([131c8c1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/131c8c181c906459f10e78e582679f62dcdac4fc))
+* update dependencies ([5de7202](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/5de72026ea3493771c2af9e216fe4ef3d3bd84a4))
+
+
+### Code Refactoring
+
+* simplify time assignment logic in getCell method ([ea012dd](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/ea012dd3ed3e1370c4dd1a1dfd529ae975bb6205))
+
 ## [4.1.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.0.0...v4.1.0) (2026-01-09)
 
 

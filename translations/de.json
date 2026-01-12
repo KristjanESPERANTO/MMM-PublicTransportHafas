@@ -9,6 +9,7 @@
   "PTH_DEPARTURE_TIME": "Abfahrt",
   "PTH_LINE": "Linie",
   "PTH_NO_DEPARTURES": "Es gibt keine erreichbaren Abfahrten.",
+  "PTH_NO_UPDATES_YET": "Noch keine Daten empfangen",
   "PTH_PLATFORM": "Steig",
   "PTH_TO": "Nach"
 }

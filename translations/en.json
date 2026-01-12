@@ -9,6 +9,7 @@
   "PTH_DEPARTURE_TIME": "Time",
   "PTH_LINE": "Line",
   "PTH_NO_DEPARTURES": "No reachable departures.",
+  "PTH_NO_UPDATES_YET": "No data received yet",
   "PTH_PLATFORM": "Platform",
   "PTH_TO": "To"
 }

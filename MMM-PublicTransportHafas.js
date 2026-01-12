@@ -178,46 +178,12 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getDom () {
-    // Error handling - only show error if threshold is exceeded
-    if (this.hasErrors() && this.errorCount > this.config.discardSocketErrorThreshold) {
-      Log.error("[MMM-PublicTransportHafas]", this.error);
-
-      let errorMessage;
-
-      switch (this.error.code) {
-        case "ENOTFOUND":
-          // HAFAS endpoint not available
-          errorMessage = this.translate("ERROR_ENOTFOUND");
-          break;
-        case "EAI_AGAIN":
-          // Temporary DNS resolution failure
-          errorMessage = this.translate("ERROR_EAI_AGAIN");
-          break;
-        case "ETIMEDOUT":
-        case "ECONNREFUSED":
-        case "ECONNRESET":
-          // Connection issues
-          errorMessage = this.translate("ERROR_CONNECTION");
-          break;
-        case "NOT_FOUNDS":
-          // Station not found
-          errorMessage = this.translate("NOT_FOUND");
-          break;
-        default:
-          errorMessage = this.error.hafasMessage || this.error.code || this.error.message;
-          break;
-      }
-
-      Log.error("[MMM-PublicTransportHafas]", errorMessage.replace(/<br>/gu, " "));
-      errorMessage = `${this.translate("ERROR_UNAVAILABLE")}<br><br><small>⚠️ ${errorMessage}</small>`;
-      return this.domBuilder.getSimpleDom(errorMessage);
+    const errorDom = this.getErrorDom();
+    if (errorDom) {
+      return errorDom;
     }
 
-    // Log errors below threshold as warnings
-    if (this.hasErrors() && this.errorCount > 0 && this.errorCount <= this.config.discardSocketErrorThreshold) {
-      Log.warn(`[MMM-PublicTransportHafas] Socket error ${this.errorCount}/${this.config.discardSocketErrorThreshold}:`, this.error);
-    }
-
+    this.logWarningsIfNeeded();
 
     if (!this.initialized) {
       return this.domBuilder.getSimpleDom(this.translate("LOADING"));
@@ -230,37 +196,77 @@ Module.register("MMM-PublicTransportHafas", {
       platform: this.translate("PTH_PLATFORM")
     };
 
-    const noDeparturesMessage = this.translate("PTH_NO_DEPARTURES");
-
     const wrapper = this.domBuilder.getDom(
       this.departures,
       headings,
-      noDeparturesMessage
+      this.translate("PTH_NO_DEPARTURES")
     );
 
-    // Display the update time at the end, if defined so by the user config
     if (this.config.displayLastUpdate) {
-      const updateInfo = document.createElement("div");
-      updateInfo.className = "xsmall light align-left";
-
-      // Show socket issues count if there are errors below the threshold
-      let updateText = "Update";
-      if (this.errorCount > 0 && this.errorCount <= this.config.discardSocketErrorThreshold) {
-        updateText = `Update (socket issues: ${this.errorCount})`;
-      }
-
-      const updateTime = this.TemporalHelper.fromUnixSeconds(this.lastUpdate);
-      const formattedTime = this.TemporalHelper.formatDateTime(
-        updateTime,
-        this.config.language,
-        this.config.displayLastUpdateOptions
-      );
-
-      updateInfo.textContent = `${updateText}: ${formattedTime}`;
-      wrapper.appendChild(updateInfo);
+      wrapper.appendChild(this.getUpdateInfoElement());
     }
 
     return wrapper;
+  },
+
+  getErrorDom () {
+    if (!this.hasErrors() || this.errorCount <= this.config.discardSocketErrorThreshold) {
+      return null;
+    }
+
+    Log.error("[MMM-PublicTransportHafas]", this.error);
+
+    const errorMessage = this.getErrorMessage();
+    Log.error("[MMM-PublicTransportHafas]", errorMessage.replace(/<br>/gu, " "));
+
+    return this.domBuilder.getSimpleDom(`${this.translate("ERROR_UNAVAILABLE")}<br><br><small>⚠️ ${errorMessage}</small>`);
+  },
+
+  getErrorMessage () {
+    switch (this.error.code) {
+      case "ENOTFOUND":
+        return this.translate("ERROR_ENOTFOUND");
+      case "EAI_AGAIN":
+        return this.translate("ERROR_EAI_AGAIN");
+      case "ETIMEDOUT":
+      case "ECONNREFUSED":
+      case "ECONNRESET":
+        return this.translate("ERROR_CONNECTION");
+      case "NOT_FOUNDS":
+        return this.translate("NOT_FOUND");
+      default:
+        return this.error.hafasMessage || this.error.code || this.error.message;
+    }
+  },
+
+  logWarningsIfNeeded () {
+    if (this.hasErrors() && this.errorCount > 0 && this.errorCount <= this.config.discardSocketErrorThreshold) {
+      Log.warn(`[MMM-PublicTransportHafas] Socket error ${this.errorCount}/${this.config.discardSocketErrorThreshold}:`, this.error);
+    }
+  },
+
+  getUpdateInfoElement () {
+    const updateInfo = document.createElement("div");
+    updateInfo.className = "xsmall light align-left";
+
+    const updateText = this.errorCount > 0 && this.errorCount <= this.config.discardSocketErrorThreshold
+      ? `Update (socket issues: ${this.errorCount})`
+      : "Update";
+
+    updateInfo.textContent = this.lastUpdate > 0
+      ? `${updateText}: ${this.getFormattedUpdateTime()}`
+      : `${updateText}: ${this.translate("PTH_NO_UPDATES_YET")}`;
+
+    return updateInfo;
+  },
+
+  getFormattedUpdateTime () {
+    const updateTime = this.TemporalHelper.fromUnixSeconds(this.lastUpdate);
+    return this.TemporalHelper.formatDateTime(
+      updateTime,
+      this.config.language,
+      this.config.displayLastUpdateOptions
+    );
   },
 
   getStyles () {

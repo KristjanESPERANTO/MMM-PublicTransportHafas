@@ -95,12 +95,26 @@ export default class DepartureFetcher {
       ? this.config.directions
       : [null];
 
-    // Build promises for parallel API calls
+    const results = await this.fetchAllDirections(directions);
+    const {departures, failures} = DepartureFetcher.processResults(results, directions);
+
+    if (failures.length > 0) {
+      getLogger().warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
+    }
+
+    const sortedDepartures = DepartureFetcher.sortDepartures(departures);
+    const uniqueDepartures = DepartureFetcher.removeDuplicates(sortedDepartures);
+    const filteredDepartures = this.applyAllFilters(uniqueDepartures);
+
+    const maxElements = this.config.maxReachableDepartures + this.config.maxUnreachableDepartures;
+    return filteredDepartures.slice(0, maxElements);
+  }
+
+  fetchAllDirections (directions) {
     const promises = directions.map((direction) => {
       const departureTime = this.getDepartureTime();
       const options = {
         duration: this.getTimeInFuture(),
-        // Convert Temporal to Date for hafas-client compatibility
         when: new Date(departureTime.epochMilliseconds)
       };
 
@@ -111,15 +125,32 @@ export default class DepartureFetcher {
       return this.hafasClient.departures(this.config.stationID, options);
     });
 
-    // Execute all requests in parallel with error handling
-    const results = await Promise.allSettled(promises);
+    return Promise.allSettled(promises);
+  }
 
-    const allDepartures = [];
+  /**
+   * Process Promise.allSettled results from HAFAS API calls.
+   * Handles both old API (array) and new API (object with .departures property).
+   *
+   * @param {Array} results - Array of Promise.allSettled results
+   * @param {Array} directions - Array of direction IDs
+   * @returns {{departures: Array, failures: Array}} Processed departures and failures
+   */
+  static processResults (results, directions) {
+    const departures = [];
     const failures = [];
 
     for (const [index, result] of results.entries()) {
       if (result.status === "fulfilled") {
-        allDepartures.push(...result.value.departures);
+        const departuresData = Array.isArray(result.value)
+          ? result.value
+          : result.value?.departures || [];
+
+        if (departuresData.length > 0) {
+          departures.push(...departuresData);
+        } else {
+          getLogger().warn(`[MMM-PublicTransportHafas] No departures found for direction ${directions[index] || "all"}`);
+        }
       } else {
         failures.push({direction: directions[index], error: result.reason});
         getLogger().error(
@@ -129,47 +160,55 @@ export default class DepartureFetcher {
       }
     }
 
-    // Continue with successful results even if some failed
-    if (failures.length > 0) {
-      getLogger().warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
-    }
+    return {departures, failures};
+  }
 
-    // Robust sorting with null checks (HAFAS may return plannedWhen instead of when)
-    allDepartures.sort((dep1, dep2) => {
+  /**
+   * Sort departures by time (when or plannedWhen).
+   * Creates a copy to avoid mutating the original array.
+   *
+   * @param {Array} departures - Array of departure objects
+   * @returns {Array} Sorted copy of departures
+   */
+  static sortDepartures (departures) {
+    return [...departures].sort((dep1, dep2) => {
       const timeA = new Date(dep1.when || dep1.plannedWhen || 0).getTime();
       const timeB = new Date(dep2.when || dep2.plannedWhen || 0).getTime();
       return timeA - timeB;
     });
+  }
 
-    // Improved duplicate detection using tripId and optional chaining
+  /**
+   * Remove duplicate departures based on tripId, time, and stop.
+   *
+   * @param {Array} departures - Array of departure objects
+   * @returns {Array} Departures with duplicates removed
+   */
+  static removeDuplicates (departures) {
     const seen = new Set();
-    let filteredDepartures = allDepartures.filter((dep) => {
-      // tripId is more unique than line.id, use it if available
+    return departures.filter((dep) => {
       const id = `${dep.tripId || dep.line?.id || "unknown"}-${dep.when || dep.plannedWhen}-${dep.stop?.id || ""}`;
       if (seen.has(id)) {
         return false;
       }
+
       seen.add(id);
       return true;
     });
+  }
 
-    const maxElements =
-      this.config.maxReachableDepartures +
-      this.config.maxUnreachableDepartures;
-
-    filteredDepartures = this.filterByTransportationTypes(filteredDepartures);
-    filteredDepartures = this.filterByIgnoredLines(filteredDepartures);
+  applyAllFilters (departures) {
+    let filtered = this.filterByTransportationTypes(departures);
+    filtered = this.filterByIgnoredLines(filtered);
 
     if (this.config.ignoreRelatedStations) {
-      filteredDepartures = this.filterByStopId(filteredDepartures);
+      filtered = this.filterByStopId(filtered);
     }
 
-    filteredDepartures = this.filterByExcludedDirections(filteredDepartures);
-    filteredDepartures = this.filterByPlatforms(filteredDepartures);
-    filteredDepartures = this.departuresMarkedWithReachability(filteredDepartures);
-    filteredDepartures = this.departuresRemovedSurplusUnreachableDepartures(filteredDepartures);
-
-    return filteredDepartures.slice(0, maxElements);
+    filtered = this.filterByExcludedDirections(filtered);
+    filtered = this.filterByPlatforms(filtered);
+    filtered = this.departuresMarkedWithReachability(filtered);
+    return this.departuresRemovedSurplusUnreachableDepartures(filtered);
   }
 
   getDepartureTime () {
@@ -292,7 +331,16 @@ export default class DepartureFetcher {
   }
 
   isReachable (departure) {
-    const departureInstant = Temporal.Instant.from(departure.when);
+    // Use when if available, otherwise fall back to plannedWhen
+    const departureTime = departure.when || departure.plannedWhen;
+
+    // If neither when nor plannedWhen is available, treat as unreachable
+    if (!departureTime) {
+      getLogger().warn("[MMM-PublicTransportHafas] Departure has no when or plannedWhen, treating as unreachable");
+      return false;
+    }
+
+    const departureInstant = Temporal.Instant.from(departureTime);
     const reachableInstant = this.getReachableTime().toInstant();
     return Temporal.Instant.compare(departureInstant, reachableInstant) >= 0;
   }

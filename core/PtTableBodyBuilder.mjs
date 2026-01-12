@@ -375,14 +375,14 @@ export default class PtTableBodyBuilder {
 
   getDirectionCell (direction) {
     const truncatePosition = 26;
-    let content = this.getProcessedDirection(direction);
+    let content = this.getProcessedDirection(direction ?? "");
     let className = "mmm-pth-direction-cell";
 
     if (
       this.config.marqueeLongDirections && content.length > truncatePosition
     ) {
       content = document.createElement("span");
-      content.textContent = this.getProcessedDirection(direction);
+      content.textContent = this.getProcessedDirection(direction ?? "");
       className += " mmm-pth-marquee";
     }
 
@@ -395,7 +395,7 @@ export default class PtTableBodyBuilder {
 
   getProcessedDirection (direction) {
     const replacements = this.config.replaceInDirections;
-    let processed = direction;
+    let processed = direction ?? "";
 
     for (const key of Object.keys(replacements)) {
       processed = processed.replaceAll(key, replacements[key]);

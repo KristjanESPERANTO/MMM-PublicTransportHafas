@@ -167,11 +167,8 @@ export default class PtTableBodyBuilder {
 
     switch (key) {
       case "time": {
-        this.time = departure.when;
-        // Use planned time if canceled
-        if (departure.canceled === true) {
-          this.time = departure.plannedWhen;
-        }
+        // Use when if available, otherwise fall back to plannedWhen
+        this.time = departure.when ?? departure.plannedWhen;
 
         // Get time cell
         cell = this.getTimeCell(this.time, departure.delay);

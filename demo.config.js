@@ -5,7 +5,7 @@ let config = {
   modules: [
     {
       module: "clock",
-      position: "top_left"
+      position: "middle_center"
     },
     {
       module: "MMM-PublicTransportHafas",
@@ -34,7 +34,7 @@ let config = {
     },
     {
       module: "MMM-PublicTransportHafas",
-      position: "top_center",
+      position: "bottom_left",
 
       config: {
         // Departures options
@@ -80,6 +80,15 @@ let config = {
         showTableHeaders: false,
         tableHeaderOrder: ["line", "direction", "time", "platform"],
         timeInFuture: 690 // In minutes
+      }
+    },
+    {
+      module: "MMM-PublicTransportHafas",
+      position: "bottom_right",
+      config: {
+        hafasProfile: "vbn",
+        stationID: "9013786",
+        stationName: "Brunnenstraße"
       }
     }
   ]

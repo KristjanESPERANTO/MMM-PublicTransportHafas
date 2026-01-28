@@ -1,16 +1,16 @@
 /*
-	This stylesheet contains the css classes needed to colorize the line labels corresponding to the colors used in "Großraumverkehr Hannover (GVH)" as of july 2025.
+  This stylesheet contains the css classes needed to colorize the line labels corresponding to the colors used in "Großraumverkehr Hannover (GVH)" as of july 2025.
 
-	Supported are 
-	the "Stadtbahn"-lines from üstra,
-	the "Bus"-lines from üstra and regiobus,
-	the "S-Bahn"-lines from S-Bahn Hannover.
-	
+  Supported are
+  the "Stadtbahn"-lines from üstra,
+  the "Bus"-lines from üstra and regiobus,
+  the "S-Bahn"-lines from S-Bahn Hannover.
+
 */
 
-/*	
-	Straßenbahn Hannover
-	(Hafas client once changed its product-descriptions from "stb" to "str" and back. Leaving both in this file to prevent further unnecessary updates)
+/*
+  Straßenbahn Hannover
+  (Hafas client once changed its product-descriptions from "stb" to "str" and back. Leaving both in this file to prevent further unnecessary updates)
 */
 .MMM-PublicTransportHafas {
   .str1,
@@ -108,8 +108,8 @@
   }
 
   /*
-		S-Bahn Hannover
-	*/
+    S-Bahn Hannover
+  */
 
   .s1 {
     background-color: #73659a;
@@ -177,9 +177,9 @@
     border-radius: 1em;
   }
 
-  /*	
-		Stadtbus Hannover
-	*/
+  /*
+    Stadtbus Hannover
+  */
 
   .bus100 {
     background-image:

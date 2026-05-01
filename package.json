@@ -47,7 +47,7 @@
     ]
   },
   "dependencies": {
-    "db-vendo-client": "^6.10.8",
+    "db-vendo-client": "^6.10.9",
     "hafas-client": "^6.3.6",
     "temporal-polyfill": "^0.3.2"
   },

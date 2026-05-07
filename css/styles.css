@@ -19,6 +19,7 @@
 
   .mmm-pth-time-cell {
     text-align: left;
+    white-space: nowrap;
   }
 
   .mmm-pth-canceled {

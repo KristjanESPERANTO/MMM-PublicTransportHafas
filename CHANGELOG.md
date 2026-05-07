@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.4.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.0...v4.4.1) (2026-05-07)
+
+
+### Fixed
+
+* **css:** prevent wrapping in departure time column when destination is long ([b8262f7](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/b8262f76cfcce100419f36ad325d5d2015cc91a2))
+
+
+### Chores
+
+* update dependencies ([dd644d8](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/dd644d8939b376aa1598d8db6249453412072afa))
+
 ## [4.4.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.3.1...v4.4.0) (2026-04-15)
 
 

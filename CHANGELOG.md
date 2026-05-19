@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.4.2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.1...v4.4.2) (2026-05-19)
+
+
+### Documentation
+
+* remove broken dbweb recommendation from direction filter note ([487cc4a](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/487cc4aabbaf1b3f67f5ea16884592136ac644ba))
+
+
+### Chores
+
+* remove copilot instructions file ([327168b](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/327168bbc9bd9e72eb675a27e6909f66f27396c9))
+* update dependencies ([299a510](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/299a510df19f96b7bd1a02cd2f5c3472a80bb7e8))
+
 ## [4.4.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.0...v4.4.1) (2026-05-07)
 
 

@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.4.3](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.2...v4.4.3) (2026-05-23)
+
+
+### Fixed
+
+* **query:** use dbweb profile for db/dbweb station search ([bb154cc](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/bb154ccde7f3fdb6f279b3351a1b3e49f4f60d84))
+
+
+### Chores
+
+* cleanup demo config ([1585c23](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/1585c238c8a5d2703e592ffa66f3dcb44bcb3efe))
+* dependencies ([0d7c3ae](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/0d7c3ae8c794f729bc7c89be3137bb7406da0308))
+
 ## [4.4.2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.1...v4.4.2) (2026-05-19)
 
 

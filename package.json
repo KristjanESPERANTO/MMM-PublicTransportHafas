@@ -47,7 +47,7 @@
     ]
   },
   "dependencies": {
-    "db-vendo-client": "^6.10.10",
+    "db-vendo-client": "^6.10.11",
     "hafas-client": "^6.3.6",
     "temporal-polyfill": "^0.3.2"
   },
@@ -55,15 +55,15 @@
     "@eslint/css": "^1.2.0",
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",
-    "@eslint/markdown": "^8.0.1",
+    "@eslint/markdown": "^8.0.2",
     "@stylistic/eslint-plugin": "^5.10.0",
     "commit-and-tag-version": "^12.7.3",
     "cspell": "^10.0.0",
     "eslint": "^10.4.0",
     "eslint-plugin-import-x": "^4.16.2",
-    "eslint-plugin-package-json": "^0.91.2",
+    "eslint-plugin-package-json": "^1.1.0",
     "globals": "^17.6.0",
-    "lint-staged": "^17.0.4",
+    "lint-staged": "^17.0.5",
     "prettier": "^3.8.3",
     "simple-git-hooks": "^2.13.1"
   },

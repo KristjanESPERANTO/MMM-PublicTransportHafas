@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.4.4](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.3...v4.4.4) (2026-07-05)
+
+
+### Chores
+
+* update dependencies ([5cc1284](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/5cc1284a7cd8a4d4c23c273706297ce838f9cee9))
+* update github actions ([6037e4d](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/6037e4dd55b201414dce2a0337d016a5da9c0113))
+
 ## [4.4.3](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.2...v4.4.3) (2026-05-23)
 
 

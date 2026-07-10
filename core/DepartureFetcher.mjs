@@ -20,6 +20,32 @@ try {
   logger = fallbackLogger;
 }
 
+const DEFAULT_FETCH_RETRIES = 2;
+const DEFAULT_RETRY_BACKOFF_MS = 350;
+
+function sleep (ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function isRetryableFetchError (error) {
+  const message = String(error?.message || "").toLowerCase();
+  const code = String(error?.code || error?.errno || "").toLowerCase();
+
+  if (["err_stream_premature_close", "econnreset", "etimedout", "eai_again", "enotfound"].includes(code)) {
+    return true;
+  }
+
+  return [
+    "premature close",
+    "invalid response body",
+    "fetch failed",
+    "network",
+    "timed out"
+  ].some((term) => message.includes(term));
+}
+
 /**
  * Helper function to determine the difference between two arrays.
  * @param {Array} arrayA
@@ -127,10 +153,44 @@ export default class DepartureFetcher {
         options.direction = direction;
       }
 
-      return this.hafasClient.departures(this.config.stationID, options);
+      return this.fetchDeparturesWithRetry(options, direction);
     });
 
     return Promise.allSettled(promises);
+  }
+
+  getFetchRetries () {
+    const retries = Number(this.config.fetchRetries);
+
+    if (!Number.isFinite(retries)) {
+      return DEFAULT_FETCH_RETRIES;
+    }
+
+    return Math.min(5, Math.max(0, Math.floor(retries)));
+  }
+
+  fetchDeparturesWithRetry (options, direction) {
+    const retries = this.getFetchRetries();
+    const maxAttempts = retries + 1;
+
+    const runAttempt = async (attempt) => {
+      try {
+        return await this.hafasClient.departures(this.config.stationID, options);
+      } catch (error) {
+        const shouldRetry = attempt < maxAttempts && isRetryableFetchError(error);
+
+        if (!shouldRetry) {
+          throw error;
+        }
+
+        const backoffMs = Math.min(3000, DEFAULT_RETRY_BACKOFF_MS * attempt);
+        logger.warn(`[MMM-PublicTransportHafas] Retry ${attempt}/${maxAttempts} for direction ${direction || "all"} in ${backoffMs}ms: ${error?.message || error}`);
+        await sleep(backoffMs);
+        return runAttempt(attempt + 1);
+      }
+    };
+
+    return runAttempt(1);
   }
 
   /**

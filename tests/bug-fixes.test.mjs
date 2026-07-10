@@ -302,6 +302,89 @@ describe("DepartureFetcher.isReachable - Null handling", () => {
 });
 
 // =============================================================================
+// Tests: retry handling for transient fetch failures
+// =============================================================================
+
+describe("DepartureFetcher retry handling", () => {
+  it("should retry transient errors and eventually succeed", async () => {
+    const fetcher = createFetcher({fetchRetries: 2});
+    let callCount = 0;
+
+    fetcher.hafasClient = {
+      departures: () => {
+        callCount += 1;
+
+        if (callCount === 1) {
+          const error = new Error("fetch failed: premature close");
+          error.code = "ERR_STREAM_PREMATURE_CLOSE";
+          return Promise.reject(error);
+        }
+
+        return Promise.resolve({departures: [createDeparture({tripId: "retry-success"})]});
+      }
+    };
+
+    const result = await fetcher.fetchDeparturesWithRetry({duration: 60, when: new Date()}, null);
+
+    assert.strictEqual(callCount, 2);
+    assert.strictEqual(Array.isArray(result.departures), true);
+    assert.strictEqual(result.departures[0].tripId, "retry-success");
+  });
+
+  it("should not retry non-retryable errors", async () => {
+    const fetcher = createFetcher({fetchRetries: 5});
+    let callCount = 0;
+
+    fetcher.hafasClient = {
+      departures: () => {
+        callCount += 1;
+        return Promise.reject(new Error("invalid station id"));
+      }
+    };
+
+    await assert.rejects(
+      fetcher.fetchDeparturesWithRetry({duration: 60, when: new Date()}, "123"),
+      /invalid station id/u
+    );
+
+    assert.strictEqual(callCount, 1);
+  });
+
+  it("should stop after configured max retries", async () => {
+    const fetcher = createFetcher({fetchRetries: 1});
+    let callCount = 0;
+
+    fetcher.hafasClient = {
+      departures: () => {
+        callCount += 1;
+        const error = new Error("network timed out");
+        error.code = "ETIMEDOUT";
+        return Promise.reject(error);
+      }
+    };
+
+    await assert.rejects(
+      fetcher.fetchDeparturesWithRetry({duration: 60, when: new Date()}, "123"),
+      /network timed out/u
+    );
+
+    assert.strictEqual(callCount, 2);
+  });
+
+  it("should clamp fetchRetries to valid range", () => {
+    const defaultFetcher = createFetcher({fetchRetries: undefined});
+    const belowMinFetcher = createFetcher({fetchRetries: -99});
+    const aboveMaxFetcher = createFetcher({fetchRetries: 99});
+    const floatFetcher = createFetcher({fetchRetries: 2.9});
+
+    assert.strictEqual(defaultFetcher.getFetchRetries(), 2);
+    assert.strictEqual(belowMinFetcher.getFetchRetries(), 0);
+    assert.strictEqual(aboveMaxFetcher.getFetchRetries(), 5);
+    assert.strictEqual(floatFetcher.getFetchRetries(), 2);
+  });
+});
+
+// =============================================================================
 // Null direction handling tests
 // =============================================================================
 

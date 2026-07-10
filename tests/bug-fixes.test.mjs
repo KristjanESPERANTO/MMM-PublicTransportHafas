@@ -109,7 +109,7 @@ describe("DepartureFetcher.processResults - API compatibility", () => {
   });
 
   it("should collect failures from rejected promises", () => {
-    const error = new Error("Network error");
+    const error = "Network error";
     const results = [
       {status: "fulfilled", value: {departures: [createDeparture()]}},
       {status: "rejected", reason: error}

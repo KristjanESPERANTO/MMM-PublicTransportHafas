@@ -74,16 +74,6 @@ export function formatRelativeTime (when, locale) {
 }
 
 /**
- * Parse an ISO 8601 string to Temporal.Instant.
- *
- * @param {string} isoString - ISO 8601 datetime string
- * @returns {Temporal.Instant} Temporal instant
- */
-export function parseInstant (isoString) {
-  return Temporal.Instant.from(isoString);
-}
-
-/**
  * Check if a value is a valid Temporal object or can be parsed as one.
  *
  * @param {any} value - Value to check

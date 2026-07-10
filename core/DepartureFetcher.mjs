@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import "temporal-polyfill/global";
 import {createRequire} from "node:module";
 import packageJson from "../package.json" with {type: "json"};
 

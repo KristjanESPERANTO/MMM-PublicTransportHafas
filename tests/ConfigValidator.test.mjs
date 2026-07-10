@@ -6,6 +6,7 @@ const defaultConfig = {
   updatesEvery: 120,
   timeToStation: 10,
   timeInFuture: 40,
+  fetchRetries: 2,
   maxUnreachableDepartures: 0,
   maxReachableDepartures: 7,
   toggleAbsoluteTimeInterval: 0
@@ -154,6 +155,32 @@ describe("ConfigValidator", () => {
         const config = {toggleAbsoluteTimeInterval: 10};
         const result = sanitizeConfig(config, defaultConfig);
         assert.strictEqual(result.toggleAbsoluteTimeInterval, 10);
+      });
+    });
+
+    describe("fetchRetries", () => {
+      it("should use default when value is undefined", () => {
+        const config = {fetchRetries: undefined};
+        const result = sanitizeConfig(config, defaultConfig);
+        assert.strictEqual(result.fetchRetries, 2);
+      });
+
+      it("should clamp to minimum 0", () => {
+        const config = {fetchRetries: -3};
+        const result = sanitizeConfig(config, defaultConfig);
+        assert.strictEqual(result.fetchRetries, 0);
+      });
+
+      it("should clamp to maximum 5", () => {
+        const config = {fetchRetries: 9};
+        const result = sanitizeConfig(config, defaultConfig);
+        assert.strictEqual(result.fetchRetries, 5);
+      });
+
+      it("should floor floating point values", () => {
+        const config = {fetchRetries: 2.9};
+        const result = sanitizeConfig(config, defaultConfig);
+        assert.strictEqual(result.fetchRetries, 2);
       });
     });
 

@@ -45,6 +45,7 @@ Module.register("MMM-PublicTransportHafas", {
     platformsToShow: [],                // Show only departures from specific platforms (e.g., ["A", "B"]). Empty array = show all platforms.
     timeToStation: 10,                  // How long do you need to walk to the Station? (in minutes)
     timeInFuture: 40,                   // Show departures for the next *timeInFuture* minutes.
+    fetchRetries: 2,                    // Number of retries for transient fetch errors (0-5).
 
     // Look and Feel
     marqueeLongDirections: true,        // Use Marquee effect for long station names?
@@ -119,7 +120,8 @@ Module.register("MMM-PublicTransportHafas", {
       excludeDirections: this.config.excludeDirections,
       platformsToShow: this.config.platformsToShow,
       maxReachableDepartures: this.config.maxReachableDepartures,
-      maxUnreachableDepartures: this.config.maxUnreachableDepartures
+      maxUnreachableDepartures: this.config.maxUnreachableDepartures,
+      fetchRetries: this.config.fetchRetries
     };
 
     this.sendSocketNotification("CREATE_FETCHER", fetcherOptions);

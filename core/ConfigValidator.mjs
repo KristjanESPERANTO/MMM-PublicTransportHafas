@@ -40,5 +40,12 @@ export function sanitizeConfig (config, defaults) {
     sanitized.maxReachableDepartures = defaults.maxReachableDepartures;
   }
 
+  // Fetch retries must be an integer in the range 0..5
+  if (Number.isFinite(sanitized.fetchRetries)) {
+    sanitized.fetchRetries = Math.min(5, Math.max(0, Math.floor(sanitized.fetchRetries)));
+  } else {
+    sanitized.fetchRetries = defaults.fetchRetries;
+  }
+
   return sanitized;
 }

@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.5.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.4...v4.5.0) (2026-07-10)
+
+
+### Added
+
+* **fetcher:** add retry handling for transient HAFAS fetch errors ([512c845](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/512c8450e15db0c7d4eff73d298256feee6dca12))
+* wire fetchRetries config ([5672b5f](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/5672b5f4c1664083a1066dcc09fa3770479b3149))
+
+
+### Fixed
+
+* update temporal-polyfill script path to global.js ([5ba4813](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/5ba4813f8ff77b6bf7519b55640ab289d9c4cb8c))
+
+
+### Chores
+
+* update dependencies ([99d8e61](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/99d8e61b866ab658698b4c7c2805bc5a738cb1eb))
+* update node engine requirement to >=22 ([e484bbc](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/e484bbcaeccf9275c087d4cb93722511cc52bd82))
+
+
+### Code Refactoring
+
+* trim temporal runtime hooks ([b7765de](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/b7765deb8f75a0f9e5df61d429fd545908930f1c))
+
+
+### Tests
+
+* clean up noisy rejection logging in bug-fixes tests ([03fc6fc](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/03fc6fca61d9e97a4838f7c8e3defb51b05361ef))
+* cover fetchRetries sanitization ([56b3e06](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/56b3e068cf621666c5d3cf12de2c445dffc99e6f))
+
 ## [4.4.4](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.3...v4.4.4) (2026-07-05)
 
 

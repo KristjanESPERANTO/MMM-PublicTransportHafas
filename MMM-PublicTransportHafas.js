@@ -290,7 +290,7 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getScripts () {
-    return [this.file("node_modules/temporal-polyfill/global.min.js")];
+    return [this.file("node_modules/temporal-polyfill/global.js")];
   },
 
   getTranslations () {

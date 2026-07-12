@@ -45,6 +45,21 @@ function isRetryableFetchError (error) {
   ].some((term) => message.includes(term));
 }
 
+function isBlockedFetchError (error) {
+  return error?.code === "OPS_BLOCKED" || Number(error?.response?.status ?? error?.status) === 452;
+}
+
+function createBlockedFetchError (error, direction) {
+  const refId = error?.response?.body?.errorRefId ?? error?.errorRefId;
+  const message = [
+    `[MMM-PublicTransportHafas] DB departures endpoint is blocked (OPS_BLOCKED / 452) for direction ${direction || "all"}.`,
+    refId && `errorRefId: ${refId}.`,
+    "Try setting hafasProfile to \"dbweb\" or another regional profile."
+  ].filter(Boolean).join(" ");
+
+  return new Error(message, {cause: error});
+}
+
 /**
  * Helper function to determine the difference between two arrays.
  * @param {Array} arrayA
@@ -176,6 +191,10 @@ export default class DepartureFetcher {
       try {
         return await this.hafasClient.departures(this.config.stationID, options);
       } catch (error) {
+        if (isBlockedFetchError(error)) {
+          throw createBlockedFetchError(error, direction);
+        }
+
         const shouldRetry = attempt < maxAttempts && isRetryableFetchError(error);
 
         if (!shouldRetry) {

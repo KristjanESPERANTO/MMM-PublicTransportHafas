@@ -371,6 +371,28 @@ describe("DepartureFetcher retry handling", () => {
     assert.strictEqual(callCount, 2);
   });
 
+  it("should surface a clear error for blocked DB responses without retrying", async () => {
+    const fetcher = createFetcher({fetchRetries: 5});
+    let callCount = 0;
+
+    fetcher.hafasClient = {
+      departures: () => {
+        callCount += 1;
+        const error = new Error("Unknown");
+        error.code = "OPS_BLOCKED";
+        error.response = {status: 452, body: {errorRefId: "0.12173317.1783842829.c03f42a"}};
+        return Promise.reject(error);
+      }
+    };
+
+    await assert.rejects(
+      fetcher.fetchDeparturesWithRetry({duration: 60, when: new Date()}, "123"),
+      /DB departures endpoint is blocked \(OPS_BLOCKED \/ 452\)/u
+    );
+
+    assert.strictEqual(callCount, 1);
+  });
+
   it("should clamp fetchRetries to valid range", () => {
     const defaultFetcher = createFetcher({fetchRetries: undefined});
     const belowMinFetcher = createFetcher({fetchRetries: -99});

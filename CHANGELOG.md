@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.5.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.5.0...v4.5.1) (2026-08-16)
+
+### Fixed
+
+* clarify DB blocked fetch errors ([d9d83d5](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/d9d83d57a5eae6897fd6494979dff11125678661))
+
+### Chores
+
+* add allowScripts config ([cb3a717](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/cb3a71795cb807341484f5346f962ac4d951e874))
+* update dependencies ([0356a0c](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/0356a0ca103b166e0bac6fc41c2bfbebc8028b9a))
+* update GitHub Actions ([7f85691](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/7f85691e5db2105a9f228d171585bfb5f67d549a))
 ## [4.5.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.4.4...v4.5.0) (2026-07-10)
 
 

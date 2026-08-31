@@ -17,11 +17,11 @@
 
 ## Description
 
-This module shows live public transport information in Germany for all stations known to the Deutsche Bahn system. Most public transportation providers in Germany providing information for that system so the coverage should be quite good.
+This module shows live public transport information. Coverage depends on the selected profile and the transport providers available through its API.
 
-For the default profile `db` the data is provided by the [db-vendo-client](https://github.com/public-transport/db-vendo-client). For other profiles the data is provided by the [hafas-client](https://github.com/public-transport/hafas-client).
+For the default profile `db`, the data is provided by the [db-vendo-client](https://github.com/public-transport/db-vendo-client). For other profiles, the data is provided by the [hafas-client](https://github.com/public-transport/hafas-client). Requests to the DB API can currently be blocked depending on the environment. If the `db` profile does not work, use a regional profile instead.
 
-Even in other european countries this module should work as HAFAS is widely used throughout Europe.
+The module can also work in other European countries because HAFAS is widely used throughout Europe.
 
 You can very easy adapt the shapes and line colors of your local transport companies. See [Providing a custom CSS file](#providing-a-custom-css-file).
 
@@ -70,40 +70,36 @@ You need the `stationId` for the station whose departures should be displayed.
 Here's how to find out the `stationId`:
 
 1. You have to be in the modules directory (`~/MagicMirror/modules/MMM-PublicTransportHafas`).
-2. Then run the following command: `node --run query`.
-3. Enter a station name. It is useful to enter a city name too since the system knows a lot of stations even outside Germany.
-4. The result could contain one or more possible stations with valid IDs.
-5. Use the appropriate ID as `stationId` in the configuration of the module.
+2. Then run the following command: `node run query`.
+3. Select the regional transport profile for the area you want to search. The available profiles are shown with their transport network names.
+4. Enter a station name or address. It is useful to enter a city name too since the system knows many stations outside Germany.
+5. The result could contain one or more possible stations with valid IDs.
+6. Use the appropriate ID as `stationID` in the configuration of the module. The `hafasProfile` in the module configuration must match the profile used for the search.
 
-The following example shows a query for "Leipzig, Wilhelm-Leuschner-Platz". This station is included two times in the result. You have to experiment which ID gives the best results.
-
-```bash
-Enter an address or station name: Leipzig, Wilhelm-Leuschner-Platz
-
-Stops found for 'Leipzig, Wilhelm-Leuschner-Platz':
-
- > Stop: Leipzig Wilhelm-Leuschner-Platz
-   ID: 8012202
-   Transport product(s): Regio, S-Bahn, Bus, Tram
-
- > Stop: Wilhelm-Leuschner-Platz, Leipzig
-   ID: 955252
-   Transport product(s): Regio, S-Bahn, Bus, Tram
-
- > Stop: Wilhelm-Leuschner-Platz, Weiterstadt
-   ID: 115849
-   Transport product(s): Regio, Bus
-
- > Stop: Wilhelm-Liebknecht-Platz, Leipzig
-   ID: 956558
-   Transport product(s): Bus, Tram
-```
-
-By default, the module uses the `db` profile. In some cases it can be advantageous to use a different profile - e.g. the default profile often does not provide platform information from local transport companies. [Here](https://github.com/public-transport/hafas-client/blob/master/p/readme.md) you can find the name of all supported interfaces. Just add the name as a parameter to the command. Like `bvg` for the profile of Berlin public transport:
+The DB profiles are currently not available for the station search because the Deutsche Bahn API blocks these requests. Regional profiles are recommended instead. For example, the VMT profile finds the Gotha stop `18.-März-Straße`:
 
 ```bash
-node --run query -- bvg
+Select a regional hafas-client profile (DB profiles are currently unavailable for this query):
+ 34. vmt - Verkehrsverbund Mittelthüringen
+Enter profile number: 34
+Using hafas-client profile: vmt
+
+Enter an address or station name: 18 März Straße Gotha
+
+Stops found for '18 März Straße Gotha':
+
+ > Stop: Gotha, 18.-März-Straße
+   ID: 167050
+   Transport product(s): tram
 ```
+
+You can also pass the profile directly as a command-line argument. For example, use the `bvg` profile for Berlin:
+
+```bash
+node run query -- bvg
+```
+
+Each profile uses its own station IDs. If you change the `hafasProfile` in the module configuration, you have to find the station ID again. [Here](https://github.com/public-transport/hafas-client/blob/master/p/readme.md) you can find the supported profiles.
 
 ## Configuration
 

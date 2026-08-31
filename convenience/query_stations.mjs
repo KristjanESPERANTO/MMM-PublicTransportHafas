@@ -1,9 +1,53 @@
 /* eslint-disable no-console */
 import * as readline from "node:readline";
 import process from "node:process";
+import {readdir} from "node:fs/promises";
 
 let profileName;
 const productMap = {};
+const profileNames = {
+  avv: "Aachener Verkehrsverbund",
+  bart: "Bay Area Rapid Transit",
+  bls: "BLS AG",
+  bvg: "Berliner Verkehrsbetriebe",
+  cfl: "Société Nationale des Chemins de Fer Luxembourgeois",
+  cmta: "Capital Metropolitan Transportation Authority",
+  dart: "Des Moines Area Regional Transit Authority",
+  "db-busradar-nrw": "DB Busradar NRW",
+  insa: "Nahverkehr Sachsen-Anhalt / INSA",
+  invg: "Ingolstädter Verkehrsgesellschaft",
+  "irish-rail": "Iarnród Éireann / Irish Rail",
+  ivb: "Innsbrucker Verkehrsbetriebe",
+  kvb: "Kölner Verkehrs-Betriebe",
+  "mobil-nrw": "mobil.nrw",
+  "mobiliteit-lu": "Mobilitéitszentral Luxembourg",
+  nahsh: "Nahverkehrsverbund Schleswig-Holstein",
+  nvv: "Nordhessischer Verkehrsverbund",
+  oebb: "Österreichische Bundesbahnen",
+  ooevv: "Oberösterreichischer Verkehrsverbund",
+  pkp: "Polskie Koleje Państwowe",
+  rejseplanen: "Rejseplanen Denmark",
+  rmv: "Rhein-Main-Verkehrsverbund",
+  rsag: "Rostocker Straßenbahn AG",
+  saarfahrplan: "Saarfahrplan / VGS",
+  salzburg: "Salzburg",
+  "sbahn-muenchen": "S-Bahn München",
+  sncb: "Belgian National Railways",
+  stv: "Steirischer Verkehrsverbund",
+  svv: "Salzburger Verkehrsverbund",
+  tpg: "Transports publics genevois",
+  vbb: "Verkehrsverbund Berlin-Brandenburg",
+  vbn: "Verkehrsverbund Bremen/Niedersachsen",
+  vkg: "Verkehrsverbund Kärnten",
+  vmt: "Verkehrsverbund Mittelthüringen",
+  vor: "Verkehrsverbund Ost-Region",
+  vos: "Verkehrsgemeinschaft Osnabrück",
+  vrn: "Verkehrsverbund Rhein-Neckar",
+  vsn: "Verkehrsverbund Süd-Niedersachsen",
+  vvt: "Verkehrsverbund Tirol",
+  vvv: "Verkehrsverbund Vorarlberg",
+  zvv: "Zürcher Verkehrsverbund"
+};
 
 /**
  * Create an array without values that occur multiple times.
@@ -43,20 +87,48 @@ function printStationInfo (station) {
   }
 }
 
-function getUserInput () {
+function getUserInput (question) {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
   });
   return new Promise((resolve) => {
     rl.question(
-      "Enter an address or station name: ",
+      question,
       (answer) => {
         rl.close();
         resolve(answer);
       }
     );
   });
+}
+
+async function getProfileName () {
+  const profileArgument = process.argv[2];
+  const profileDirectory = new URL("../node_modules/hafas-client/p/", import.meta.url);
+  const availableProfiles = (await readdir(profileDirectory, {withFileTypes: true}))
+    .filter((entry) => entry.isDirectory() && entry.name !== "db")
+    .map((entry) => entry.name)
+    .sort();
+
+  if (profileArgument) {
+    if (!availableProfiles.includes(profileArgument)) {
+      throw new Error(`Unknown or unsupported query profile: ${profileArgument}`);
+    }
+    return profileArgument;
+  }
+
+  console.info("Select a regional hafas-client profile (DB profiles are currently unavailable for this query):\n");
+  availableProfiles.forEach((profile, index) => {
+    console.info(` ${index + 1}. ${profile} - ${profileNames[profile]}`);
+  });
+
+  const selection = await getUserInput("Enter profile number: ");
+  const profile = availableProfiles[Number(selection) - 1];
+  if (!profile) {
+    throw new Error("Invalid profile selection");
+  }
+  return profile;
 }
 
 async function requestStations (client, stationName) {
@@ -77,7 +149,7 @@ async function requestStations (client, stationName) {
 }
 
 async function query (profile, createClient) {
-  const stationName = await getUserInput();
+  const stationName = await getUserInput("Enter an address or station name: ");
   if (profile) {
     const client = createClient(
       profile,
@@ -97,26 +169,12 @@ async function query (profile, createClient) {
 
 async function importProfile () {
   try {
-    let profile;
-    let createClient;
-
-    if (process.argv.length === 3 && process.argv[2] !== "db" && process.argv[2] !== "dbweb") {
-      profileName = process.argv[2];
-      console.info(`Using hafas-client profile: ${profileName}\n`);
-      const hafasClient = await import("hafas-client");
-      const createHafasClient = hafasClient.createClient;
-      const hafas = await import(`hafas-client/p/${profileName}/index.js`);
-      profile = hafas.profile;
-      createClient = createHafasClient;
-    } else {
-      profileName = "dbweb";
-      console.info("Using db-vendo dbweb profile to search for db-compatible station IDs\n");
-      const vendoClient = await import("db-vendo-client");
-      const createVendoClient = vendoClient.createClient;
-      const vendo = await import("db-vendo-client/p/dbweb/index.js");
-      profile = vendo.profile;
-      createClient = createVendoClient;
-    }
+    profileName = await getProfileName();
+    console.info(`Using hafas-client profile: ${profileName}\n`);
+    const hafasClient = await import("hafas-client");
+    const createClient = hafasClient.createClient;
+    const hafas = await import(`hafas-client/p/${profileName}/index.js`);
+    const profile = hafas.profile;
 
     Object.keys(profile.products).forEach((key) => {
       const productMapKey = profile.products[key].id;

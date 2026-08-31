@@ -78,6 +78,8 @@ Here's how to find out the `stationId`:
 
 The DB profiles are currently not available for the station search because the Deutsche Bahn API blocks these requests. Regional profiles are recommended instead. For example, the VMT profile finds the Gotha stop `18.-März-Straße`:
 
+If this module or the selected profile does not work for your station, you can try the [MMM-PublicTransportHub](https://github.com/KristjanESPERANTO/MMM-PublicTransportHub) module with its Transitous provider instead. Its HAFAS provider uses the same regional HAFAS profiles, and its Vendo provider may be affected by the same DB API restrictions.
+
 ```bash
 Select a regional hafas-client profile (DB profiles are currently unavailable for this query):
  34. vmt - Verkehrsverbund Mittelthüringen

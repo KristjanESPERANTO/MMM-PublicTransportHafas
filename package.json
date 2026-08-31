@@ -58,20 +58,20 @@
     "@eslint/markdown": "^8.0.3",
     "@stylistic/eslint-plugin": "^5.10.0",
     "commit-and-tag-version": "^13.1.2",
-    "cspell": "^10.0.1",
-    "eslint": "^10.8.1",
+    "cspell": "^10.2.0",
+    "eslint": "^10.9.1",
     "eslint-plugin-import-x": "^4.17.1",
-    "eslint-plugin-package-json": "^1.7.1",
+    "eslint-plugin-package-json": "^1.8.0",
     "globals": "^17.11.0",
-    "lint-staged": "^17.3.0",
+    "lint-staged": "^17.4.1",
     "prettier": "^3.9.6",
-    "simple-git-hooks": "^2.13.1"
+    "simple-git-hooks": "^2.14.0"
   },
   "engines": {
     "node": ">=22"
   },
   "allowScripts": {
-    "simple-git-hooks@2.13.1": true,
+    "simple-git-hooks@2.14.0": true,
     "unrs-resolver@1.12.2": true
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "mmm-publictransporthafas",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "description": "A public transport module for MagicMirror² powered by db-vendo-client and hafas-client data.",
   "keywords": [
     "MagicMirror",

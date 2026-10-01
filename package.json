@@ -64,7 +64,7 @@
     "eslint-plugin-package-json": "^1.8.0",
     "globals": "^17.11.0",
     "lint-staged": "^17.4.1",
-    "prettier": "^3.9.6",
+    "prettier": "^3.9.9",
     "simple-git-hooks": "^2.14.0"
   },
   "engines": {

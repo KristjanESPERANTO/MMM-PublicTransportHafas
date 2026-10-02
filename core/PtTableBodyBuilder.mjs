@@ -212,7 +212,7 @@ export default class PtTableBodyBuilder {
       cell.className = "mmm-pth-time-cell";
       cell.appendChild(document.createTextNode(time));
 
-      if (this.config.showAbsoluteTime) {
+      if (this.config.showDelay && (this.config.showAbsoluteTime || typeof delay === "number")) {
         cell.appendChild(this.getDelaySpan(delay));
       }
     } else {

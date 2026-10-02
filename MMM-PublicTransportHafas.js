@@ -53,6 +53,7 @@ Module.register("MMM-PublicTransportHafas", {
     showColoredLineSymbols: true,       // Want colored line symbols?
     useColorForRealtimeInfo: true,      // Want colored real time information (timeToStation, early)?
     showAbsoluteTime: true,             // How should the departure time be displayed? "15:10" (absolute) or "in 5 minutes" (relative)
+    showDelay: true,                    // Show the delay next to absolute and relative departure times?
     toggleAbsoluteTimeInterval: 0,      // Automatically switch between absolute and relative time every n seconds (0 = disabled)
     noRealtimeDelayString: "+?",        // Only relevant if 'showAbsoluteTime: true'. The string that is displayed as delay if no real-time departure time data is available.
     showRelativeTimeOnlyUnder: 10 * 60 * 1000,  // Display the time only relatively if the departure takes place in less than 10 minutes (600000 milliseconds). The value is only relevant if showAbsoluteTime: false.

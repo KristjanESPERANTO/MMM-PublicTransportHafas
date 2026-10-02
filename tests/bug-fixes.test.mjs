@@ -453,3 +453,77 @@ describe("PtTableBodyBuilder - Null direction handling", async () => {
     assert.strictEqual(processed, "Hauptbahnhof");
   });
 });
+
+describe("PtTableBodyBuilder - Delay display", async () => {
+  const PtTableBodyBuilder = (await import("../core/PtTableBodyBuilder.mjs")).default;
+
+  function withDocument (callback) {
+    const originalDocument = globalThis.document;
+    globalThis.document = {
+      createElement: () => ({
+        children: [],
+        appendChild (child) {
+          this.children.push(child);
+        }
+      }),
+      createTextNode: (text) => ({textContent: text})
+    };
+
+    try {
+      return callback();
+    } finally {
+      if (originalDocument === undefined) {
+        delete globalThis.document;
+      } else {
+        globalThis.document = originalDocument;
+      }
+    }
+  }
+
+  function getDelaySpan (cell) {
+    return cell.children.find((child) => child.className?.includes("mmm-pth-delay"));
+  }
+
+  it("shows a numeric delay in relative time mode", () => {
+    withDocument(() => {
+      const builder = new PtTableBodyBuilder({
+        language: "en",
+        showAbsoluteTime: false,
+        showDelay: true
+      });
+      const when = Temporal.Now.instant().add({minutes: 5})
+        .toString();
+
+      assert.strictEqual(getDelaySpan(builder.getTimeCell(when, 300)).textContent, "+5");
+    });
+  });
+
+  it("does not show the delay when showDelay is false in either time mode", () => {
+    withDocument(() => {
+      for (const showAbsoluteTime of [true, false]) {
+        const builder = new PtTableBodyBuilder({
+          language: "en",
+          showAbsoluteTime,
+          showDelay: false
+        });
+        const when = Temporal.Now.instant().add({minutes: 5})
+          .toString();
+
+        assert.strictEqual(getDelaySpan(builder.getTimeCell(when, 300)), undefined);
+      }
+    });
+  });
+
+  it("keeps the no-realtime placeholder in absolute mode", () => {
+    withDocument(() => {
+      const builder = new PtTableBodyBuilder({
+        language: "en",
+        showAbsoluteTime: true,
+        showDelay: true,
+        noRealtimeDelayString: "+?"
+      });
+
+      assert.strictEqual(getDelaySpan(builder.getTimeCell("2026-10-02T12:00:00Z")).textContent, "+?");
+    });
+  });
+});

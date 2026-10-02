@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.6.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.5.2...v4.6.0) (2026-10-02)
+
+### Added
+
+* add configurable delay display ([deb5ad6](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/deb5ad627765c6e6c636708bd6f59363e15dc3cf))
+
+### Fixed
+
+* clarify fetch error reporting ([cc56bf7](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/cc56bf76c49dbe8d1d7b51f023f4556dcde4facf))
+* honor 24-hour time format ([93d1575](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/93d15758f8449e4ccd43b4f12b5947cf3a4b584f))
+* preserve warning marquee during time toggles ([6b481c2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/6b481c2e04ce5d2745652e42ef67adf3f06ccd61))
+
+### Chores
+
+* remove temporal-polyfill dependency ([0200ed5](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/0200ed5d80f26b5aff31bcbdc55e8f07c93b5ad8))
+* update dependencies ([83a53fd](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/83a53fd3aa98b90c9ca33a6dd637662c37bc5db6))
+
+### Code Refactoring
+
+* remove module prefix from logger messages ([0eb3a75](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/0eb3a759713da9e6f1362978c9e50928fa107ac4))
+
 ## [4.5.2](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.5.1...v4.5.2) (2026-08-31)
 
 ### Fixed

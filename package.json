@@ -48,8 +48,7 @@
   },
   "dependencies": {
     "db-vendo-client": "^6.11.3",
-    "hafas-client": "^6.3.6",
-    "temporal-polyfill": "^1.0.5"
+    "hafas-client": "^6.3.6"
   },
   "devDependencies": {
     "@eslint/css": "^2.0.0",

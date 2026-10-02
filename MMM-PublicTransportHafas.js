@@ -9,7 +9,7 @@
 var UserPresence = true; // true by default, so no impact for user without a PIR sensor
 
 Module.register("MMM-PublicTransportHafas", {
-  requiresVersion: "2.31.0",
+  requiresVersion: "2.37.0",
   defaults: {
     // Module misc
     name: "MMM-PublicTransportHafas",
@@ -287,10 +287,6 @@ Module.register("MMM-PublicTransportHafas", {
     }
 
     return styles;
-  },
-
-  getScripts () {
-    return [this.file("node_modules/temporal-polyfill/global.js")];
   },
 
   getTranslations () {

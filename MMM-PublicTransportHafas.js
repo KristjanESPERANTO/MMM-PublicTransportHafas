@@ -220,7 +220,7 @@ Module.register("MMM-PublicTransportHafas", {
   },
 
   getErrorDom () {
-    if (!this.hasErrors() || this.errorCount <= this.config.discardSocketErrorThreshold) {
+    if (!this.hasErrors() || this.departures.length > 0 && this.errorCount <= this.config.discardSocketErrorThreshold) {
       return null;
     }
 
@@ -229,11 +229,23 @@ Module.register("MMM-PublicTransportHafas", {
     const errorMessage = this.getErrorMessage();
     Log.error("[MMM-PublicTransportHafas]", errorMessage.replace(/<br>/gu, " "));
 
-    return this.domBuilder.getSimpleDom(`${this.translate("ERROR_UNAVAILABLE")}<br><br><small>⚠️ ${errorMessage}</small>`);
+    const escapedErrorMessage = errorMessage.replace(/[&<>"']/gu, (character) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;"
+    })[character]);
+
+    return this.domBuilder.getSimpleDom(`${this.translate("ERROR_UNAVAILABLE")}<br><br><small>⚠️ ${escapedErrorMessage}</small>`);
   },
 
   getErrorMessage () {
-    switch (this.error.code) {
+    const errorCode = this.error.code === "ALL_DIRECTIONS_FAILED" && this.error.cause?.code
+      ? this.error.cause.code
+      : this.error.code;
+
+    switch (errorCode) {
       case "ENOTFOUND":
         return this.translate("ERROR_ENOTFOUND");
       case "EAI_AGAIN":
@@ -242,6 +254,12 @@ Module.register("MMM-PublicTransportHafas", {
       case "ECONNREFUSED":
       case "ECONNRESET":
         return this.translate("ERROR_CONNECTION");
+      case "ERR_STREAM_PREMATURE_CLOSE":
+        return this.translate("ERROR_PREMATURE_CLOSE");
+      case "OPS_BLOCKED":
+        return this.translate("ERROR_OPS_BLOCKED");
+      case "ALL_DIRECTIONS_FAILED":
+        return this.translate("ERROR_ALL_DIRECTIONS_FAILED");
       case "NOT_FOUNDS":
         return this.translate("NOT_FOUND");
       default:

@@ -57,7 +57,13 @@ function createBlockedFetchError (error, direction) {
     "Try setting hafasProfile to \"dbweb\" or another regional profile."
   ].filter(Boolean).join(" ");
 
-  return new Error(message, {cause: error});
+  const blockedError = new Error(message, {cause: error});
+  blockedError.code = "OPS_BLOCKED";
+  if (refId) {
+    blockedError.errorRefId = refId;
+  }
+
+  return blockedError;
 }
 
 /**
@@ -144,7 +150,34 @@ export default class DepartureFetcher {
     const {departures, failures} = DepartureFetcher.processResults(results, directions);
 
     if (failures.length > 0) {
-      logger.warn(`Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
+      if (failures.length === directions.length) {
+        const details = failures.map(({direction, error}) => {
+          const errorCode = error?.code || error?.errno;
+          const errorMessage = error?.message || String(error);
+          const directionName = direction || "all";
+          return `${directionName}${errorCode
+            ? ` (${errorCode})`
+            : ""}: ${errorMessage}`;
+        }).join("; ");
+        const cause = failures[0].error;
+        const fetchError = new Error(`All ${failures.length} direction(s) failed: ${details}`, {cause});
+        const causeCode = cause?.code || cause?.errno;
+        const attempts = failures
+          .map(({error}) => Number(error?.attempts))
+          .filter(Number.isFinite);
+
+        fetchError.code = failures.length === 1
+          ? causeCode
+          : "ALL_DIRECTIONS_FAILED";
+        fetchError.errorRefId = cause?.errorRefId;
+        if (attempts.length > 0) {
+          fetchError.attempts = Math.max(...attempts);
+        }
+
+        throw fetchError;
+      }
+
+      logger.warn(`Failed to fetch ${failures.length} of ${directions.length} direction(s); using successful results`);
     }
 
     const sortedDepartures = DepartureFetcher.sortDepartures(departures);
@@ -195,9 +228,13 @@ export default class DepartureFetcher {
           throw createBlockedFetchError(error, direction);
         }
 
-        const shouldRetry = attempt < maxAttempts && isRetryableFetchError(error);
+        const retryable = isRetryableFetchError(error);
+        const shouldRetry = attempt < maxAttempts && retryable;
 
         if (!shouldRetry) {
+          if (retryable && error && typeof error === "object") {
+            error.attempts = attempt;
+          }
           throw error;
         }
 
@@ -236,10 +273,11 @@ export default class DepartureFetcher {
         }
       } else {
         failures.push({direction: directions[index], error: result.reason});
-        logger.error(
-          `Failed to fetch departures for direction ${directions[index]}:`,
-          result.reason
-        );
+        const errorCode = result.reason?.code || result.reason?.errno;
+        const errorMessage = result.reason?.message || String(result.reason);
+        logger.error(`Failed to fetch departures for direction ${directions[index] || "all"}${errorCode
+          ? ` (${errorCode})`
+          : ""}: ${errorMessage}`);
       }
     }
 

@@ -2,6 +2,27 @@ const Log = require("logger");
 const NodeHelper = require("node_helper");
 const DepartureFetcher = require("./core/DepartureFetcher.mjs").default;
 
+function serializeError (error, depth = 0) {
+  const source = error && typeof error === "object"
+    ? error
+    : {message: String(error)};
+  const serialized = JSON.parse(JSON.stringify({
+    name: source.name,
+    message: source.message || String(error),
+    code: source.code || source.errno,
+    hafasMessage: source.hafasMessage,
+    errorRefId: source.errorRefId ?? source.response?.body?.errorRefId,
+    attempts: source.attempts,
+    status: source.status ?? source.response?.status
+  }));
+
+  if (source.cause && depth < 3) {
+    serialized.cause = serializeError(source.cause, depth + 1);
+  }
+
+  return serialized;
+}
+
 module.exports = NodeHelper.create({
   start () {
     this.departuresFetchers = [];
@@ -108,7 +129,7 @@ module.exports = NodeHelper.create({
       } catch (error) {
         Log.error("Fetcher initialization failed again.", error);
         const payload = {
-          error,
+          error: serializeError(error),
           identifier: fetcher.getIdentifier()
         };
         this.sendSocketNotification("FETCH_ERROR", payload);
@@ -125,7 +146,7 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("DEPARTURES_FETCHED", payload);
     } catch (error) {
       const payload = {
-        error,
+        error: serializeError(error),
         identifier: fetcher.getIdentifier()
       };
       this.sendSocketNotification("FETCH_ERROR", payload);

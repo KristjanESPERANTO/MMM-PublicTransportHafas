@@ -124,6 +124,37 @@ describe("DepartureFetcher.processResults - API compatibility", () => {
   });
 });
 
+describe("DepartureFetcher.fetchDepartures - failed requests", () => {
+  it("throws when every direction fails instead of returning an empty list", async () => {
+    const fetcher = createFetcher();
+    const requestError = Object.assign(new Error("Premature close"), {
+      code: "ERR_STREAM_PREMATURE_CLOSE",
+      attempts: 6
+    });
+    fetcher.fetchAllDirections = () => [{status: "rejected", reason: requestError}];
+
+    await assert.rejects(fetcher.fetchDepartures(), (error) => {
+      assert.strictEqual(error.code, "ERR_STREAM_PREMATURE_CLOSE");
+      assert.strictEqual(error.attempts, 6);
+      assert.match(error.message, /All 1 direction\(s\) failed/u);
+      return true;
+    });
+  });
+
+  it("keeps successful departures when another direction fails", async () => {
+    const fetcher = createFetcher({directions: ["123", "456"], maxUnreachableDepartures: 0});
+    fetcher.fetchAllDirections = () => [
+      {status: "fulfilled", value: [createDeparture({tripId: "success"})]},
+      {status: "rejected", reason: new Error("Premature close")}
+    ];
+
+    const departures = await fetcher.fetchDepartures();
+
+    assert.strictEqual(departures.length, 1);
+    assert.strictEqual(departures[0].tripId, "success");
+  });
+});
+
 // =============================================================================
 // Tests: sortDepartures - Null handling
 // =============================================================================

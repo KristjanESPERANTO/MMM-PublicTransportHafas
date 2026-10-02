@@ -15,6 +15,30 @@ import {formatTime} from "../core/TemporalHelper.mjs";
 // =============================================================================
 
 describe("getErrorMessage", () => {
+  it("should identify premature closes and blocked provider endpoints", () => {
+    const getErrorMessage = (error) => {
+      const errorCode = error.code === "ALL_DIRECTIONS_FAILED" && error.cause?.code
+        ? error.cause.code
+        : error.code;
+
+      switch (errorCode) {
+        case "ERR_STREAM_PREMATURE_CLOSE":
+          return "ERROR_PREMATURE_CLOSE";
+        case "OPS_BLOCKED":
+          return "ERROR_OPS_BLOCKED";
+        case "ALL_DIRECTIONS_FAILED":
+          return "ERROR_ALL_DIRECTIONS_FAILED";
+        default:
+          return error.code || error.message;
+      }
+    };
+
+    assert.strictEqual(getErrorMessage({code: "ERR_STREAM_PREMATURE_CLOSE"}), "ERROR_PREMATURE_CLOSE");
+    assert.strictEqual(getErrorMessage({code: "OPS_BLOCKED"}), "ERROR_OPS_BLOCKED");
+    assert.strictEqual(getErrorMessage({code: "ALL_DIRECTIONS_FAILED", cause: {code: "OPS_BLOCKED"}}), "ERROR_OPS_BLOCKED");
+    assert.strictEqual(getErrorMessage({code: "ALL_DIRECTIONS_FAILED"}), "ERROR_ALL_DIRECTIONS_FAILED");
+  });
+
   it("should return correct message for ENOTFOUND", () => {
     const error = {code: "ENOTFOUND"};
 

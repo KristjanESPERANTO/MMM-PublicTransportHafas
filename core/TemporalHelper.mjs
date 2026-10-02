@@ -28,6 +28,8 @@ export function formatTime (temporal, locale, timeFormat) {
 
   if (timeFormat === 12) {
     options.hour12 = true;
+  } else if (timeFormat === 24) {
+    options.hourCycle = "h23";
   }
 
   return temporal.toLocaleString(locale, options);

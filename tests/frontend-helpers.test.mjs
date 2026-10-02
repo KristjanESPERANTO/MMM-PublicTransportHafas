@@ -1,5 +1,6 @@
 import {describe, it} from "node:test";
 import assert from "node:assert";
+import {formatTime} from "../core/TemporalHelper.mjs";
 
 /**
  * Tests for frontend helper methods added during bug fixes (January 2026)
@@ -167,5 +168,17 @@ describe("Update info text generation", () => {
       : "Update";
 
     assert.strictEqual(updateText, "Update");
+  });
+});
+
+describe("TemporalHelper.formatTime", () => {
+  it("uses 24-hour time for English locale when configured", () => {
+    const temporal = {
+      toLocaleString (locale, options) {
+        return new Intl.DateTimeFormat(locale, options).format(new Date(2026, 0, 1, 13, 5));
+      }
+    };
+
+    assert.strictEqual(formatTime(temporal, "en", 24), "13:05");
   });
 });

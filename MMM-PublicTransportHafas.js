@@ -190,13 +190,15 @@ Module.register("MMM-PublicTransportHafas", {
   getDom () {
     const errorDom = this.getErrorDom();
     if (errorDom) {
+      this.domRoot = errorDom;
       return errorDom;
     }
 
     this.logWarningsIfNeeded();
 
     if (!this.initialized) {
-      return this.domBuilder.getSimpleDom(this.translate("LOADING"));
+      this.domRoot = this.domBuilder.getSimpleDom(this.translate("LOADING"));
+      return this.domRoot;
     }
 
     const headings = {
@@ -211,6 +213,7 @@ Module.register("MMM-PublicTransportHafas", {
       headings,
       this.translate("PTH_NO_DEPARTURES")
     );
+    this.domRoot = wrapper;
 
     if (this.config.displayLastUpdate) {
       wrapper.appendChild(this.getUpdateInfoElement());
@@ -369,7 +372,7 @@ Module.register("MMM-PublicTransportHafas", {
     if (this.config.toggleAbsoluteTimeInterval > 0 && this.toggleAbsoluteTimeIntervalID === 0) {
       this.toggleAbsoluteTimeIntervalID = setInterval(() => {
         this.config.showAbsoluteTime = !this.config.showAbsoluteTime;
-        this.updateDom();
+        this.domBuilder.updateTimeDisplay(this.domRoot, this.departures);
       }, this.config.toggleAbsoluteTimeInterval * 1_000);
     }
   },

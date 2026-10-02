@@ -159,6 +159,9 @@ export default class PtTableBodyBuilder {
 
     for (const key of this.config.tableHeaderOrder) {
       const cell = this.getCell(key, departure);
+      if (key === "time" || key === "direction") {
+        cell.dataset.departureIndex = index;
+      }
       row.appendChild(cell);
     }
 

@@ -37,6 +37,34 @@ export default class PtDomBuilder {
     return wrapper;
   }
 
+  updateTimeDisplay (root, departures) {
+    if (!root) {
+      return;
+    }
+
+    const tableBodyBuilder = new PtTableBodyBuilder(this.config);
+    const displayCells = root.querySelectorAll("[data-departure-index]");
+
+    for (const cell of displayCells) {
+      const index = Number(cell.dataset.departureIndex);
+      const departure = departures[index];
+      if (departure) {
+        if (cell.classList.contains("mmm-pth-direction-cell")) {
+          cell.classList.toggle("mmm-pth-text-left", !this.config.showAbsoluteTime);
+        } else {
+          const when = departure.when ?? departure.plannedWhen;
+          const replacement = tableBodyBuilder.getTimeCell(when, departure.delay);
+          replacement.dataset.departureIndex = index;
+          if (departure.canceled === true) {
+            replacement.className += " mmm-pth-canceled";
+          }
+
+          cell.replaceWith(replacement);
+        }
+      }
+    }
+  }
+
   getWrapper () {
     const wrapper = document.createElement("div");
     wrapper.className = "mmm-pth-wrapper";

@@ -558,3 +558,82 @@ describe("PtTableBodyBuilder - Delay display", async () => {
     });
   });
 });
+
+describe("PtDomBuilder.updateTimeDisplay", async () => {
+  const PtDomBuilder = (await import("../core/PtDomBuilder.mjs")).default;
+  const PtTableBodyBuilder = (await import("../core/PtTableBodyBuilder.mjs")).default;
+
+  it("updates time cells without replacing unrelated warning content", () => {
+    const originalDocument = globalThis.document;
+    globalThis.document = {
+      createElement: () => ({
+        children: [],
+        dataset: {},
+        appendChild (child) {
+          this.children.push(child);
+        }
+      }),
+      createTextNode: (text) => ({textContent: text})
+    };
+
+    try {
+      const config = {
+        language: "en",
+        timeFormat: "24",
+        showAbsoluteTime: false,
+        toggleAbsoluteTimeInterval: 10,
+        showDelay: true,
+        noRealtimeDelayString: "+?",
+        useColorForRealtimeInfo: false
+      };
+      const builder = new PtDomBuilder(config);
+      const expectedBuilder = new PtTableBodyBuilder(config);
+      const when = Temporal.Now.instant().add({minutes: 5})
+        .toString();
+      let replacement;
+      const timeCell = {
+        dataset: {departureIndex: "0"},
+        classList: {contains: () => false},
+        replaceWith (element) {
+          replacement = element;
+        }
+      };
+      const directionClasses = new Set(["mmm-pth-direction-cell"]);
+      const directionCell = {
+        dataset: {departureIndex: "0"},
+        classList: {
+          contains: (className) => directionClasses.has(className),
+          toggle (className, force) {
+            if (force) {
+              directionClasses.add(className);
+            } else {
+              directionClasses.delete(className);
+            }
+          }
+        }
+      };
+      const warningContent = {textContent: "long warning", animationState: "running"};
+      const root = {
+        children: [warningContent],
+        querySelectorAll: (selector) => {
+          assert.strictEqual(selector, "[data-departure-index]");
+          return [timeCell, directionCell];
+        }
+      };
+
+      builder.updateTimeDisplay(root, [{when, plannedWhen: when, delay: 120}]);
+
+      assert.strictEqual(replacement.children[0].textContent, expectedBuilder.getDisplayDepartureTime(when, 120));
+      assert.strictEqual(replacement.children[1].textContent, "+2");
+      assert.ok(directionClasses.has("mmm-pth-text-left"));
+      assert.strictEqual(root.children[0], warningContent);
+      assert.strictEqual(warningContent.animationState, "running");
+    } finally {
+      if (originalDocument === undefined) {
+        delete globalThis.document;
+      } else {
+        globalThis.document = originalDocument;
+      }
+    }
+  });
+});

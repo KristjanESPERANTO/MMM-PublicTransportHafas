@@ -52,7 +52,7 @@ function isBlockedFetchError (error) {
 function createBlockedFetchError (error, direction) {
   const refId = error?.response?.body?.errorRefId ?? error?.errorRefId;
   const message = [
-    `[MMM-PublicTransportHafas] DB departures endpoint is blocked (OPS_BLOCKED / 452) for direction ${direction || "all"}.`,
+    `DB departures endpoint is blocked (OPS_BLOCKED / 452) for direction ${direction || "all"}.`,
     refId && `errorRefId: ${refId}.`,
     "Try setting hafasProfile to \"dbweb\" or another regional profile."
   ].filter(Boolean).join(" ");
@@ -144,7 +144,7 @@ export default class DepartureFetcher {
     const {departures, failures} = DepartureFetcher.processResults(results, directions);
 
     if (failures.length > 0) {
-      logger.warn(`[MMM-PublicTransportHafas] Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
+      logger.warn(`Failed to fetch ${failures.length} of ${directions.length} direction(s), continuing with successful results`);
     }
 
     const sortedDepartures = DepartureFetcher.sortDepartures(departures);
@@ -202,7 +202,7 @@ export default class DepartureFetcher {
         }
 
         const backoffMs = Math.min(3000, DEFAULT_RETRY_BACKOFF_MS * attempt);
-        logger.warn(`[MMM-PublicTransportHafas] Retry ${attempt}/${maxAttempts} for direction ${direction || "all"} in ${backoffMs}ms: ${error?.message || error}`);
+        logger.warn(`Retry ${attempt}/${maxAttempts} for direction ${direction || "all"} in ${backoffMs}ms: ${error?.message || error}`);
         await sleep(backoffMs);
         return runAttempt(attempt + 1);
       }
@@ -232,12 +232,12 @@ export default class DepartureFetcher {
         if (departuresData.length > 0) {
           departures.push(...departuresData);
         } else {
-          logger.warn(`[MMM-PublicTransportHafas] No departures found for direction ${directions[index] || "all"}`);
+          logger.warn(`No departures found for direction ${directions[index] || "all"}`);
         }
       } else {
         failures.push({direction: directions[index], error: result.reason});
         logger.error(
-          `[MMM-PublicTransportHafas] Failed to fetch departures for direction ${directions[index]}:`,
+          `Failed to fetch departures for direction ${directions[index]}:`,
           result.reason
         );
       }
@@ -419,7 +419,7 @@ export default class DepartureFetcher {
 
     // If neither when nor plannedWhen is available, treat as unreachable
     if (!departureTime) {
-      logger.warn("[MMM-PublicTransportHafas] Departure has no when or plannedWhen, treating as unreachable");
+      logger.warn("Departure has no when or plannedWhen, treating as unreachable");
       return false;
     }
 

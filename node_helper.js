@@ -1,6 +1,6 @@
-const Log = require("logger");
-const NodeHelper = require("node_helper");
-const DepartureFetcher = require("./core/DepartureFetcher.mjs").default;
+import DepartureFetcher from "./core/DepartureFetcher.mjs";
+import Log from "logger";
+import NodeHelper from "node_helper";
 
 function serializeError (error, depth = 0) {
   const source = error && typeof error === "object"
@@ -23,11 +23,11 @@ function serializeError (error, depth = 0) {
   return serialized;
 }
 
-module.exports = NodeHelper.create({
+export default class extends NodeHelper {
   start () {
     this.departuresFetchers = [];
     this.fetcherConfigs = {};
-  },
+  }
 
   socketNotificationReceived (notification, payload) {
     switch (notification) {
@@ -39,7 +39,7 @@ module.exports = NodeHelper.create({
         this.fetchDepartures(payload);
         break;
     }
-  },
+  }
 
   /**
    * Creates a new departure fetcher for a station or returns an existing one.
@@ -73,13 +73,13 @@ module.exports = NodeHelper.create({
       Log.info(`Using existing transportation fetcher for station id '${fetcher.getStationID()}'.`);
       this.sendFetcherLoaded(fetcher);
     }
-  },
+  }
 
   sendFetcherLoaded (fetcher) {
     this.sendSocketNotification("FETCHER_INITIALIZED", {
       identifier: fetcher.getIdentifier()
     });
-  },
+  }
 
   async fetchDepartures (identifier) {
     const fetcher = this.departuresFetchers[identifier];
@@ -90,7 +90,7 @@ module.exports = NodeHelper.create({
     }
 
     await this.fetchWithInitializedFetcher(fetcher);
-  },
+  }
 
   /**
    * Handles the case when a fetcher is requested but doesn't exist yet.
@@ -110,7 +110,7 @@ module.exports = NodeHelper.create({
     }
 
     Log.log("Fetcher is undefined. If this occurs only sporadically, it is not a problem.");
-  },
+  }
 
   /**
    * Fetches departures using an existing fetcher instance.
@@ -152,4 +152,4 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("FETCH_ERROR", payload);
     }
   }
-});
+}

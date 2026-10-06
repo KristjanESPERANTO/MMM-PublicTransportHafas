@@ -25,14 +25,14 @@
     }
   ],
   "main": "MMM-PublicTransportHafas.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "demo": "cd ../../ && MM_CONFIG_FILE=modules/MMM-PublicTransportHafas/demo.config.js node --run start:dev",
     "lint": "eslint && prettier . --check",
     "lint:fix": "eslint --fix && prettier . --write",
     "prepare": "simple-git-hooks || true",
     "query": "node ./convenience/query_stations.mjs",
-    "release": "commit-and-tag-version --config ./changelog.config.js",
+    "release": "commit-and-tag-version --config ./changelog.config.cjs",
     "test": "node --run lint && node --run test:spelling && node --run test:unit",
     "test:spelling": "cspell .",
     "test:unit": "node --test 'tests/**/*.test.mjs'"

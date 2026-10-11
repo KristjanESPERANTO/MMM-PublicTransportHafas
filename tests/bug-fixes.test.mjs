@@ -9,6 +9,7 @@ import assert from "node:assert";
  */
 
 const DepartureFetcher = (await import("../core/DepartureFetcher.mjs")).default;
+const {formatRemarkText} = await import("../core/PtTableBodyBuilder.mjs");
 
 // =============================================================================
 // Helper functions
@@ -55,6 +56,43 @@ function createFetcher (configOverrides = {}) {
 
   return new DepartureFetcher({...defaultConfig, ...configOverrides});
 }
+
+describe("formatRemarkText", () => {
+  it("renders HTML warning lists as one-line plain text", () => {
+    const originalDOMParser = globalThis.DOMParser;
+
+    globalThis.DOMParser = class {
+      parseFromString (html) {
+        this.html = html;
+
+        return {
+          querySelectorAll: () => [],
+          createTextNode: (value) => value,
+          body: {
+            textContent: this.html
+              .replace(/<\s*li\b[^>]*>/giu, " · ")
+              .replace(/<\s*br\s*\/?\s*>/giu, " ")
+              .replace(/<[^>]*>/gu, " ")
+              .replace(/&amp;/gu, "&")
+          }
+        };
+      }
+    };
+
+    try {
+      assert.strictEqual(
+        formatRemarkText("<B>Info:</B><UL><LI>Track 1 &amp; 2</LI><LI>Closed<br>now</LI></UL>"),
+        "Info: · Track 1 & 2 · Closed now"
+      );
+    } finally {
+      if (originalDOMParser === undefined) {
+        delete globalThis.DOMParser;
+      } else {
+        globalThis.DOMParser = originalDOMParser;
+      }
+    }
+  });
+});
 
 // =============================================================================
 // Tests: processResults - HAFAS API compatibility

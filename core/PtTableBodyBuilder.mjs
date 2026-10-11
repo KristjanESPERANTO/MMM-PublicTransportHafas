@@ -1,6 +1,39 @@
 import * as TemporalHelper from "./TemporalHelper.mjs";
 
 /**
+ * Converts a HAFAS remark that may contain HTML into compact, single-line text.
+ * List items are separated with middle dots, line breaks become spaces, and
+ * formatting markup is reduced to its text content.
+ *
+ * @param {string} text - Remark text that may contain HTML markup.
+ * @returns {string} A whitespace-normalized, single-line plain-text remark.
+ */
+export function formatRemarkText (text) {
+  const parsedDocument = new DOMParser().parseFromString(text, "text/html");
+
+  for (const element of parsedDocument.querySelectorAll("script, style")) {
+    element.remove();
+  }
+
+  for (const listItem of parsedDocument.querySelectorAll("li")) {
+    listItem.before(parsedDocument.createTextNode(" · "));
+  }
+
+  for (const lineBreak of parsedDocument.querySelectorAll("br")) {
+    lineBreak.replaceWith(" ");
+  }
+
+  let plainText = parsedDocument.body.textContent.trim()
+    .split(/\s+/u)
+    .join(" ");
+  while (plainText.startsWith("· ")) {
+    plainText = plainText.slice(2).trimStart();
+  }
+
+  return plainText;
+}
+
+/**
  * Builds the table body for departure display.
  * Uses Temporal API for modern date/time handling.
  */
@@ -115,8 +148,7 @@ export default class PtTableBodyBuilder {
         !this.config.warningRemarksFilter.some((removable) => remark.summary.includes(removable)) &&
         !this.remarksCollector.some((removable) => remark.text.includes(removable)) &&
         !this.remarksCollector.some((removable) => remark.summary.includes(removable))) {
-        marquee.textContent += `  ⚠️  ${remark.summary.replaceAll("\n", " ")}:
-            ${remark.text.replaceAll("\n", " ")}`;
+        marquee.textContent += `  ⚠️  ${formatRemarkText(remark.summary)}: ${formatRemarkText(remark.text)}`;
 
         if (this.config.showWarningsOnce === true) {
           // Add remark.summary and remark.text to the remarksCollector array. Elements in this array will not be displayed again

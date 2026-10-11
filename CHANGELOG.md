@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.6.1](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.6.0...v4.6.1) (2026-10-11)
+
+### Fixed
+
+* **remarks:** normalize warning text ([008da98](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/008da98b6acb82ee7b3eaf56cd2e9bc29fb37291))
+
+### Chores
+
+* update cspell config ([773c0ed](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/773c0edcaf157ed7e847d029844ef5ac7977a6ef))
+* update devDependencies ([9e7bf35](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/commit/9e7bf3581622a3a3fd6443a800e75b6dc6ac9321))
+
 ## [4.6.0](https://github.com/KristjanESPERANTO/MMM-PublicTransportHafas/compare/v4.5.2...v4.6.0) (2026-10-02)
 
 ### Added
